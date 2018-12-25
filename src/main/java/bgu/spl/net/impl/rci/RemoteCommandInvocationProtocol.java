@@ -1,12 +1,14 @@
 package bgu.spl.net.impl.rci;
 
-import bgu.spl.net.api.ResponseContainer;
+import bgu.spl.net.api.MessageContainer;
 import bgu.spl.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl.net.api.bidi.Connections;
 
 import java.io.Serializable;
 
-public class RemoteCommandInvocationProtocol<T,D> implements BidiMessagingProtocol<T> {
+// T represents MessageContainer
+// D represents Shared DB Obj
+public class RemoteCommandInvocationProtocol<T extends MessageContainer,D> implements BidiMessagingProtocol<T> {
     private int connectionId;
     private Connections<T> connections;
     private D arg;
@@ -21,12 +23,20 @@ public class RemoteCommandInvocationProtocol<T,D> implements BidiMessagingProtoc
         this.connections = connections;
     }
 
+    /**
+     * execute command from message container
+     * send message container with result to connetions
+     * @param msg - message container
+     */
     @Override
-    public void process(ResponseContainer<T> msg) {
-        Serializable executionResult = ((Command<D>) msg).execute(arg);
-
-        connections.send(connectionId, (T)executionResult);
+    public void process(T msg) {
+        Command<D> cmd = msg.getCommand();
+        Serializable executionResult = cmd.execute(arg);
+        msg.setResult(executionResult);
+        connections.send(connectionId, msg);
     }
+
+
 
     @Override
     public boolean shouldTerminate() {

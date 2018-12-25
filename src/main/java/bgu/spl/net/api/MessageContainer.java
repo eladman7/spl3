@@ -1,10 +1,15 @@
 package bgu.spl.net.api;
 
-public class ResponseContainer<T> {
-    private T result;
+import bgu.spl.net.impl.rci.Command;
+
+import java.io.Serializable;
+
+public class MessageContainer<D> implements Serializable {
+    private Command<D> command;
+    private Serializable result;
     private boolean ack;
     private String error;
-    Object additionalData;
+    private Object additionalData;
 
     public boolean isAck() {
         return ack;
@@ -30,11 +35,19 @@ public class ResponseContainer<T> {
         this.additionalData = additionalData;
     }
 
-    public T getResult() {
+    public Serializable getResult() {
         return result;
     }
 
-    public void setResult(T result) {
+    public void setResult(Serializable result) {
         this.result = result;
+    }
+
+    public Command<D> getCommand() {
+        return command;
+    }
+
+    public void setCommand(Command<D> command) {
+        this.command = command;
     }
 }

@@ -2,7 +2,7 @@ package bgu.spl.net.impl.rci;
 
 import java.io.Serializable;
 
-public interface Command<T> extends Serializable {
-
-    Serializable execute(T arg);
+public interface Command<D> extends Serializable {
+    // T here is DB
+    Serializable execute(D arg);
 }

@@ -99,8 +99,10 @@ public class Reactor<T> implements Server<T> {
         int connectionId = 5;
         BidiMessagingProtocol<T> protocol = protocolFactory.get();
         protocol.start(connectionId, connections);
+        MessageEncoderDecoder<T> codec = readerFactory.get(); // T here is MessageContainerCodec
+
         final NonBlockingConnectionHandler<T> handler = new NonBlockingConnectionHandler<>(
-                connectionId, readerFactory.get(),
+                connectionId, codec,
                 protocol,
                 clientChan,
                 this);
