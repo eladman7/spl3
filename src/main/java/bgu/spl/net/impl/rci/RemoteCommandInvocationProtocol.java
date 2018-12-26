@@ -7,7 +7,7 @@ import bgu.spl.net.api.bidi.Connections;
 import java.io.Serializable;
 
 // T represents MessageContainer
-// D represents Shared DB Obj
+// D represents Shared DBModels Obj
 public class RemoteCommandInvocationProtocol<T extends MessageContainer,D> implements BidiMessagingProtocol<T> {
     private int connectionId;
     private Connections<T> connections;
