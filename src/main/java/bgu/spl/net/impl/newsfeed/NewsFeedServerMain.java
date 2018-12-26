@@ -1,9 +1,6 @@
 package bgu.spl.net.impl.newsfeed;
 
-import bgu.spl.net.api.MessageContainer;
-import bgu.spl.net.impl.rci.Command;
-import bgu.spl.net.impl.rci.MessageContainerCodec;
-import bgu.spl.net.impl.rci.ObjectEncoderDecoder;
+import bgu.spl.net.impl.rci.EncoderDecoder.EncoderDecoderMessageContainer;
 import bgu.spl.net.impl.rci.RemoteCommandInvocationProtocol;
 import bgu.spl.net.srv.Server;
 
@@ -23,7 +20,7 @@ public class NewsFeedServerMain {
                 Runtime.getRuntime().availableProcessors(),
                 7777, //port
                 () ->  new RemoteCommandInvocationProtocol<>(feed), //protocol factory
-                MessageContainerCodec::new //message encoder decoder factory
+                EncoderDecoderMessageContainer::new //message encoder decoder factory
         ).serve();
 
     }

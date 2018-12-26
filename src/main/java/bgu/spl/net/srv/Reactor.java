@@ -2,9 +2,7 @@ package bgu.spl.net.srv;
 
 import bgu.spl.net.api.MessageEncoderDecoder;
 import bgu.spl.net.api.bidi.BidiMessagingProtocol;
-import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.api.bidi.ConnectionsImp;
-import bgu.spl.net.srv.bidi.ConnectionHandler;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -16,7 +14,7 @@ public class Reactor<T> implements Server<T> {
 
     private final int port;
     private final Supplier<BidiMessagingProtocol<T>> protocolFactory;
-    private final Supplier<MessageEncoderDecoder<T>> readerFactory;
+    private final Supplier<MessageEncoderDecoder<T>> encoderDecoderFactory;
     private final ActorThreadPool pool;
     private Selector selector;
     private ConnectionsImp<T> connections;
@@ -27,12 +25,12 @@ public class Reactor<T> implements Server<T> {
             int numThreads,
             int port,
             Supplier<BidiMessagingProtocol<T>> protocolFactory,
-            Supplier<MessageEncoderDecoder<T>> readerFactory) {
+            Supplier<MessageEncoderDecoder<T>> encoderDecoderFactory) {
         this.connections = new ConnectionsImp<>();
         this.pool = new ActorThreadPool(numThreads);
         this.port = port;
         this.protocolFactory = protocolFactory;
-        this.readerFactory = readerFactory;
+        this.encoderDecoderFactory = encoderDecoderFactory;
     }
 
     @Override
@@ -99,7 +97,7 @@ public class Reactor<T> implements Server<T> {
         int connectionId = 5;
         BidiMessagingProtocol<T> protocol = protocolFactory.get();
         protocol.start(connectionId, connections);
-        MessageEncoderDecoder<T> codec = readerFactory.get(); // T here is MessageContainerCodec
+        MessageEncoderDecoder<T> codec = encoderDecoderFactory.get(); // T here is EncoderDecoderMessageContainer
 
         final NonBlockingConnectionHandler<T> handler = new NonBlockingConnectionHandler<>(
                 connectionId, codec,
