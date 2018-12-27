@@ -31,6 +31,7 @@ public class FollowDecoder<D> implements MessageEncoderDecoder<Command<D>> {
         }
     }
 
+
     @Override
     public byte[] encode(Command<D> message) {
         return new byte[0];
