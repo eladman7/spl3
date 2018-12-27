@@ -3,8 +3,9 @@ package bgu.spl.net.impl.rci.EncoderDecoder;
 import bgu.spl.net.api.MessageEncoderDecoder;
 import bgu.spl.net.impl.rci.Command;
 import bgu.spl.net.impl.rci.CommandModels.PostCommand;
+import bgu.spl.net.impl.rci.ExecutionInfo;
 
-public class PostDecoder<D> implements MessageEncoderDecoder<Command<D>> {
+public class PostDecoder implements MessageEncoderDecoder<Command<ExecutionInfo>> {
 
     private StringEncoderDecoder stringEncoderDecoder;
 
@@ -13,16 +14,16 @@ public class PostDecoder<D> implements MessageEncoderDecoder<Command<D>> {
     }
 
     @Override
-    public Command<D> decodeNextByte(byte nextByte) {
+    public Command<ExecutionInfo> decodeNextByte(byte nextByte) {
         String postMessage = stringEncoderDecoder.decodeNextByte(nextByte);
         if (postMessage != null){
-            return new PostCommand<>(postMessage);
+            return new PostCommand(postMessage);
         }
         return null;
     }
 
     @Override
-    public byte[] encode(Command<D> message) {
+    public byte[] encode(Command<ExecutionInfo> cmd) {
         return new byte[0];
     }
 }

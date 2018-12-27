@@ -1,22 +1,54 @@
 package bgu.spl.net.api;
 
 import bgu.spl.net.impl.rci.Command;
+import bgu.spl.net.impl.rci.ExecutionInfo;
 
-import java.io.Serializable;
-
-public class MessageContainer<D> implements Serializable {
-    private Command<D> command;
-    private Serializable result;
-    private boolean ack;
-    private String error;
-    private Object additionalData;
-
-    public boolean isAck() {
-        return ack;
+public class MessageContainer{
+    public enum Type {
+        ACK, ERROR, NOTIFICATION;
     }
 
-    public void setAck(boolean ack) {
-        this.ack = ack;
+    private Command<ExecutionInfo> command;
+    private Type type;
+    private String error;
+    private Object additionalData;
+    private short originOpcode;
+    private String fromUsername;
+    private String content;
+
+    public String getFromUsername() {
+        return fromUsername;
+    }
+
+    public void setFromUsername(String fromUsername) {
+        this.fromUsername = fromUsername;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public MessageContainer() {
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public short getOriginOpcode() {
+        return originOpcode;
+    }
+
+    public void setOriginOpcode(short originOpcode) {
+        this.originOpcode = originOpcode;
     }
 
     public String getError() {
@@ -35,19 +67,11 @@ public class MessageContainer<D> implements Serializable {
         this.additionalData = additionalData;
     }
 
-    public Serializable getResult() {
-        return result;
-    }
-
-    public void setResult(Serializable result) {
-        this.result = result;
-    }
-
-    public Command<D> getCommand() {
+    public Command<ExecutionInfo> getCommand() {
         return command;
     }
 
-    public void setCommand(Command<D> command) {
+    public void setCommand(Command<ExecutionInfo> command) {
         this.command = command;
     }
 }

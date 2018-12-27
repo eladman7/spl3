@@ -1,10 +1,12 @@
 package bgu.spl.net.impl.rci.EncoderDecoder;
 
+import bgu.spl.net.api.MessageContainer;
 import bgu.spl.net.api.MessageEncoderDecoder;
 import bgu.spl.net.impl.rci.Command;
 import bgu.spl.net.impl.rci.CommandModels.RegisterCommand;
+import bgu.spl.net.impl.rci.ExecutionInfo;
 
-public class RegisterDecoder<D> implements MessageEncoderDecoder<Command<D>> {
+public class RegisterDecoder implements MessageEncoderDecoder<Command<ExecutionInfo>> {
     private StringEncoderDecoder stringEncoderDecoder;
     private String username = null;
 
@@ -13,7 +15,7 @@ public class RegisterDecoder<D> implements MessageEncoderDecoder<Command<D>> {
     }
 
     @Override
-    public Command<D> decodeNextByte(byte nextByte) {
+    public Command<ExecutionInfo> decodeNextByte(byte nextByte) {
         if (this.username == null){ // still reading username
             String username = stringEncoderDecoder.decodeNextByte(nextByte);
             if (username != null){
@@ -31,7 +33,7 @@ public class RegisterDecoder<D> implements MessageEncoderDecoder<Command<D>> {
     }
 
     @Override
-    public byte[] encode(Command<D> message) {
+    public byte[] encode(Command<ExecutionInfo> cmd) {
         return new byte[0];
     }
 }

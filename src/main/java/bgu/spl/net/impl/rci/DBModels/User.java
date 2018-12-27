@@ -13,7 +13,24 @@ public class User {
     private Queue<Post> posted;
     private Queue<PrivateMessage> sent;
     private Queue<PrivateMessage> received;
+    private int connectionId;
 
+    public boolean isFollowing(String username){
+        for (User user: following){
+            if (user.getUsername().equals(username)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int getConnectionId() {
+        return connectionId;
+    }
+
+    public void setConnectionId(int connectionId) {
+        this.connectionId = connectionId;
+    }
 
     public User(String username, String password) {
         this.username = username;
@@ -26,11 +43,11 @@ public class User {
         received = new ConcurrentLinkedQueue<>();
     }
 
-    public Queue<User> getFollowers() {
+    public Queue<User> getMyFollowers() {
         return followers;
     }
 
-    public void setFollowers(Queue<User> followers) {
+    public void setMyFollowers(Queue<User> followers) {
         this.followers = followers;
     }
 
@@ -42,11 +59,11 @@ public class User {
         this.loggedIn.set(loggedIn);
     }
 
-    public Queue<User> getFollowing() {
+    public Queue<User> getImFollowing() {
         return following;
     }
 
-    public void setFollowing(Queue<User> following) {
+    public void setImFollowing(Queue<User> following) {
         this.following = following;
     }
 

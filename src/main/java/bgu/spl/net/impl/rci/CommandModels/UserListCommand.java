@@ -1,15 +1,13 @@
 package bgu.spl.net.impl.rci.CommandModels;
 
-import bgu.spl.net.api.Messages.Response;
 import bgu.spl.net.impl.rci.Command;
+import bgu.spl.net.impl.rci.ExecutionInfo;
 
-import java.io.Serializable;
-
-public class UserListCommand<D> implements Command<D> {
+public class UserListCommand implements Command<ExecutionInfo> {
 
     @Override
-    public Response execute(D db) {
-        return null;
+    public void execute(ExecutionInfo execInfo) {
+
     }
 }
 

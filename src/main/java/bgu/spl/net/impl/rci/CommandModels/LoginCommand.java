@@ -1,14 +1,12 @@
 package bgu.spl.net.impl.rci.CommandModels;
 
-import bgu.spl.net.api.Messages.Ack;
-import bgu.spl.net.api.Messages.Error;
-import bgu.spl.net.api.Messages.Response;
 import bgu.spl.net.impl.rci.Command;
 import bgu.spl.net.impl.rci.DBModels.DB;
 import bgu.spl.net.impl.rci.DBModels.User;
+import bgu.spl.net.impl.rci.ExecutionInfo;
 
 
-public class LoginCommand<D> implements Command<D> {
+public class LoginCommand extends Responder implements Command<ExecutionInfo> {
     private static final short opcode = 2;
     private String username;
     private String password;
@@ -19,15 +17,15 @@ public class LoginCommand<D> implements Command<D> {
     }
 
     @Override
-    public Response execute(D _db) {
-        DB db = (DB) _db;
+    public void execute(ExecutionInfo execInfo) {
+        DB db = execInfo.getDb();
         User user = db.getUser(username);
         if (user != null && password.equals(user.getPassword()) && !user.isLoggedIn()){
             user.setLoggedIn(true);
-            // todo add user to connections somehow
-            return new Ack(opcode, null);
+            user.setConnectionId(execInfo.getConnId());
+            ack(execInfo, opcode, null);
         }else {
-            return new Error(opcode);
+            error(execInfo, opcode);
         }
     }
 }

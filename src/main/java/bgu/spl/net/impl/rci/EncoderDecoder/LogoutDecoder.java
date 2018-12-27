@@ -3,15 +3,16 @@ package bgu.spl.net.impl.rci.EncoderDecoder;
 import bgu.spl.net.api.MessageEncoderDecoder;
 import bgu.spl.net.impl.rci.Command;
 import bgu.spl.net.impl.rci.CommandModels.LogoutCommand;
+import bgu.spl.net.impl.rci.ExecutionInfo;
 
-public class LogoutDecoder<D> implements MessageEncoderDecoder<Command<D>> {
+public class LogoutDecoder implements MessageEncoderDecoder<Command<ExecutionInfo>> {
     @Override
-    public LogoutCommand<D> decodeNextByte(byte nextByte) {
-        return new LogoutCommand<>();
+    public LogoutCommand decodeNextByte(byte nextByte) {
+        return new LogoutCommand();
     }
 
     @Override
-    public byte[] encode(Command<D> message) {
+    public byte[] encode(Command<ExecutionInfo> message) {
         return new byte[0];
     }
 }

@@ -1,25 +1,22 @@
 package bgu.spl.net.impl.rci;
 
 import bgu.spl.net.api.MessageContainer;
-import bgu.spl.net.api.Messages.Response;
 import bgu.spl.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl.net.api.bidi.Connections;
+import bgu.spl.net.impl.rci.DBModels.DB;
 
-import java.io.Serializable;
 
-// T represents MessageContainer
-// D represents Shared DBModels Obj
-public class RemoteCommandInvocationProtocol<T extends MessageContainer,D> implements BidiMessagingProtocol<T> {
+public class RemoteCommandInvocationProtocol implements BidiMessagingProtocol<MessageContainer> {
     private int connectionId;
-    private Connections<T> connections;
-    private D arg;
+    private Connections<MessageContainer> connections;
+    private DB db;
 
-    public RemoteCommandInvocationProtocol(D arg) {
-        this.arg = arg;
+    public RemoteCommandInvocationProtocol(DB db) {
+        this.db = db;
     }
 
     @Override
-    public void start(int connectionId, Connections<T> connections) {
+    public void start(int connectionId, Connections<MessageContainer> connections) {
         this.connectionId = connectionId;
         this.connections = connections;
     }
@@ -30,12 +27,10 @@ public class RemoteCommandInvocationProtocol<T extends MessageContainer,D> imple
      * @param msg - message container
      */
     @Override
-    public void process(T msg) {
-        Command<D> cmd = msg.getCommand();
-        Response executionResult = cmd.execute(arg);
-        Serializable result = null;
-        msg.setResult(result);
-        connections.send(connectionId, msg);
+    public void process(MessageContainer msg) {
+        Command<ExecutionInfo> cmd = msg.getCommand();
+        ExecutionInfo execInfo = new ExecutionInfo(connections, connectionId, db);
+        cmd.execute(execInfo);
     }
 
 

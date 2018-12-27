@@ -36,9 +36,19 @@ public class DB {
     public Queue<User> getUsers() {
         return users;
     }
+
     public User getUser(String username){
         for (User user: users){
             if (user.getUsername().equals(username)){
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public User getUser(int connectionId){
+        for (User user: users){
+            if (user.getConnectionId() == connectionId){
                 return user;
             }
         }
@@ -49,12 +59,20 @@ public class DB {
         this.users = users;
     }
 
+    public void addPost(String content, User from){
+        posts.add(new Post(content, from));
+    }
+
     public Queue<Post> getPosts() {
         return posts;
     }
 
     public void setPosts(Queue<Post> posts) {
         this.posts = posts;
+    }
+
+    public void addPrivateMessage(String content, User from, User to){
+        privateMessages.add(new PrivateMessage(content, from, to));
     }
 
     public Queue<PrivateMessage> getPrivateMessages() {

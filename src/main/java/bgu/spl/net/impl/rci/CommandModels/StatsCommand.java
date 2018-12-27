@@ -1,11 +1,10 @@
 package bgu.spl.net.impl.rci.CommandModels;
 
-import bgu.spl.net.api.Messages.Response;
 import bgu.spl.net.impl.rci.Command;
+import bgu.spl.net.impl.rci.ExecutionInfo;
 
-import java.io.Serializable;
 
-public class StatsCommand<D> implements Command<D> {
+public class StatsCommand implements Command<ExecutionInfo> {
     private String username;
 
     public StatsCommand(String username) {
@@ -13,8 +12,8 @@ public class StatsCommand<D> implements Command<D> {
     }
 
     @Override
-    public Response execute(D db) {
-        return null;
+    public void execute(ExecutionInfo execInfo) {
+
     }
 }
 

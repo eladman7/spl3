@@ -1,6 +1,5 @@
 package bgu.spl.net.impl.newsfeed;
 
-import bgu.spl.net.api.Messages.Response;
 import bgu.spl.net.impl.rci.Command;
 import java.io.Serializable;
 
@@ -15,9 +14,9 @@ public class PublishNewsCommand implements Command<NewsFeed> {
     }
  
     @Override
-    public Response execute(NewsFeed db) {
-        db.publish(channel, news);
-        return null;
+    public void execute(NewsFeed db) {
+//        db.publish(channel, news);
+//        return null;
     }
  
 }

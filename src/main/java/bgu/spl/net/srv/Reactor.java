@@ -2,35 +2,44 @@ package bgu.spl.net.srv;
 
 import bgu.spl.net.api.MessageEncoderDecoder;
 import bgu.spl.net.api.bidi.BidiMessagingProtocol;
-import bgu.spl.net.api.bidi.ConnectionsImp;
+import bgu.spl.net.api.bidi.Connections;
+import bgu.spl.net.api.bidi.ConnectionsImpl;
+import bgu.spl.net.srv.bidi.ConnectionHandler;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.*;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
-public class Reactor<T> implements Server<T> {
+public class Reactor<T> implements Server{
 
     private final int port;
     private final Supplier<BidiMessagingProtocol<T>> protocolFactory;
     private final Supplier<MessageEncoderDecoder<T>> encoderDecoderFactory;
     private final ActorThreadPool pool;
     private Selector selector;
-    private ConnectionsImp<T> connections;
+    private Connections<T> connections;
     private Thread selectorThread;
     private final ConcurrentLinkedQueue<Runnable> selectorTasks = new ConcurrentLinkedQueue<>();
+    private Map<Integer, ConnectionHandler<T>> clientsMap;
+    private final AtomicInteger indexDispatcher;
 
     public Reactor(
             int numThreads,
             int port,
             Supplier<BidiMessagingProtocol<T>> protocolFactory,
             Supplier<MessageEncoderDecoder<T>> encoderDecoderFactory) {
-        this.connections = new ConnectionsImp<>();
         this.pool = new ActorThreadPool(numThreads);
         this.port = port;
         this.protocolFactory = protocolFactory;
         this.encoderDecoderFactory = encoderDecoderFactory;
+        this.clientsMap = new ConcurrentHashMap<>();
+        this.connections = new ConnectionsImpl<>(clientsMap);
+        this.indexDispatcher = new AtomicInteger(0);
     }
 
     @Override
@@ -93,18 +102,17 @@ public class Reactor<T> implements Server<T> {
     private void handleAccept(ServerSocketChannel serverChan, Selector selector) throws IOException {
         SocketChannel clientChan = serverChan.accept();
         clientChan.configureBlocking(false);
-        //todo: generate new client id
-        int connectionId = 5;
+        int connectionId = indexDispatcher.getAndDecrement();
         BidiMessagingProtocol<T> protocol = protocolFactory.get();
         protocol.start(connectionId, connections);
-        MessageEncoderDecoder<T> codec = encoderDecoderFactory.get(); // T here is EncoderDecoderMessageContainer
+        MessageEncoderDecoder<T> codec = encoderDecoderFactory.get();
 
         final NonBlockingConnectionHandler<T> handler = new NonBlockingConnectionHandler<>(
                 connectionId, codec,
                 protocol,
                 clientChan,
                 this);
-        connections.addConnection(connectionId, handler);
+        clientsMap.put(connectionId, handler);
         clientChan.register(selector, SelectionKey.OP_READ, handler);
     }
 

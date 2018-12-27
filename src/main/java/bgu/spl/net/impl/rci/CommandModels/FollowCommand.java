@@ -1,21 +1,69 @@
 package bgu.spl.net.impl.rci.CommandModels;
 
-import bgu.spl.net.api.Messages.Response;
 import bgu.spl.net.impl.rci.Command;
+import bgu.spl.net.impl.rci.DBModels.DB;
+import bgu.spl.net.impl.rci.DBModels.User;
+import bgu.spl.net.impl.rci.ExecutionInfo;
 
-public class FollowCommand<D> implements Command<D> {
+import java.util.ArrayList;
+import java.util.List;
 
-    private String[] users;
+public class FollowCommand extends Responder implements Command<ExecutionInfo> {
+    private String[] usernamesToFollow;
     private boolean follow;
+    private static final short opcode = 4;
 
     public FollowCommand(String[] users, boolean follow) {
-        this.users = users;
+        this.usernamesToFollow = users;
         this.follow = follow;
     }
 
     @Override
-    public Response execute(D db) {
-        return null;
+    public void execute(ExecutionInfo execInfo) {
+        DB db = execInfo.getDb();
+        User me = db.getUser(execInfo.getConnId());
+        if (me.isLoggedIn()){
+            if (follow) {
+                executeFollow(execInfo);
+            }else {
+                executeUnFollow(execInfo);
+            }
+        }else {
+            error(execInfo, opcode);
+        }
     }
+
+    private void executeUnFollow(ExecutionInfo execInfo) {
+        // todo this
+    }
+
+    private void executeFollow(ExecutionInfo execInfo) {
+        DB db = execInfo.getDb();
+        User me = db.getUser(execInfo.getConnId());
+        List<User> newToFollow = new ArrayList<>();
+
+        for (String username: usernamesToFollow){
+            User userToFollow = db.getUser(username);
+            if (userToFollow != null && !me.isFollowing(username)){
+                newToFollow.add(userToFollow);
+            }
+        }
+
+        if (newToFollow.size() > 0){
+            List<String> toFollowNames = usersToNames(newToFollow);
+            ack(execInfo, opcode, toFollowNames);
+        }else {
+            error(execInfo, opcode);
+        }
+    }
+
+    private List<String> usersToNames(List<User> newToFollow) {
+        List<String> newToFollowNames = new ArrayList<>();
+        for (User user: newToFollow){
+            newToFollowNames.add(user.getUsername());
+        }
+        return newToFollowNames;
+    }
+
 }
 

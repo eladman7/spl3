@@ -6,7 +6,7 @@ import bgu.spl.net.api.bidi.BidiMessagingProtocol;
 import java.io.Closeable;
 import java.util.function.Supplier;
 
-public interface Server<T> extends Closeable {
+public interface Server extends Closeable {
 
     /**
      * The main loop of the server, Starts listening and handling new clients.
@@ -21,7 +21,7 @@ public interface Server<T> extends Closeable {
      * @param <T> The Message Object for the protocol
      * @return A new Thread per client server
      */
-    public static <T> Server<T>  threadPerClient(
+    public static <T> Server threadPerClient(
             int port,
             Supplier<BidiMessagingProtocol<T>> protocolFactory,
             Supplier<MessageEncoderDecoder<T> > encoderDecoderFactory) {
@@ -44,7 +44,7 @@ public interface Server<T> extends Closeable {
      * @param <T> The Message Object for the protocol
      * @return A new reactor server
      */
-    public static <T> Server<T> reactor(
+    public static <T> Server reactor(
             int nthreads,
             int port,
             Supplier<BidiMessagingProtocol<T>> protocolFactory,

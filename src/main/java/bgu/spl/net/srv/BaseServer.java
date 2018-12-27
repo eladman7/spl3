@@ -8,7 +8,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.function.Supplier;
 
-public abstract class BaseServer<T> implements Server<T> {
+public abstract class BaseServer<T> implements Server{
 
     private final int port;
     private final Supplier<BidiMessagingProtocol<T>> protocolFactory;

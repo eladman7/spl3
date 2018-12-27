@@ -3,29 +3,30 @@ package bgu.spl.net.impl.rci.EncoderDecoder;
 import bgu.spl.net.api.MessageContainer;
 import bgu.spl.net.api.MessageEncoderDecoder;
 import bgu.spl.net.impl.rci.Command;
+import bgu.spl.net.impl.rci.ExecutionInfo;
 
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EncoderDecoderMessageContainer<D> implements MessageEncoderDecoder<MessageContainer> {
+public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<MessageContainer> {
     private final ByteBuffer opCodeBuffer = ByteBuffer.allocate(2);
     private int opcode = -1;
-    private Map<Integer, MessageEncoderDecoder<Command<D>>> codeToDecoder;
+    private Map<Integer, MessageEncoderDecoder<Command<ExecutionInfo>>> codeToDecoder;
     private ShortDecoder shortDecoder;
 
-    public EncoderDecoderMessageContainer() {
+    public MessageContainerEncoderDecoder() {
         shortDecoder = new ShortDecoder();
 
         codeToDecoder = new HashMap<>();
-        codeToDecoder.put(1, new RegisterDecoder<>());
-        codeToDecoder.put(2, new LoginDecoder<>());
-        codeToDecoder.put(3, new LogoutDecoder<>());
-        codeToDecoder.put(4, new FollowDecoder<>());
-        codeToDecoder.put(5, new PostDecoder<>());
-        codeToDecoder.put(6, new PMDecoder<>());
-        codeToDecoder.put(7, new UserListDecoder<>());
-        codeToDecoder.put(8, new StatsDecoder<>());
+        codeToDecoder.put(1, new RegisterDecoder());
+        codeToDecoder.put(2, new LoginDecoder());
+        codeToDecoder.put(3, new LogoutDecoder());
+        codeToDecoder.put(4, new FollowDecoder());
+        codeToDecoder.put(5, new PostDecoder());
+        codeToDecoder.put(6, new PMDecoder());
+        codeToDecoder.put(7, new UserListDecoder());
+        codeToDecoder.put(8, new StatsDecoder());
     }
 
     /**
@@ -44,14 +45,14 @@ public class EncoderDecoderMessageContainer<D> implements MessageEncoderDecoder<
             return null;
         } else { // we are in the data part
 
-            Command<D> cmd = decodeCommand(nextByte);
+            Command<ExecutionInfo> cmd = decodeCommand(nextByte);
 
             if (cmd == null) {
                 return null;
             } else {
                 opcode = -1;
                 opCodeBuffer.clear();
-                MessageContainer<D> messageContainer = new MessageContainer<>();
+                MessageContainer messageContainer = new MessageContainer();
                 messageContainer.setCommand(cmd);
                 return messageContainer;
             }
@@ -59,8 +60,8 @@ public class EncoderDecoderMessageContainer<D> implements MessageEncoderDecoder<
 
     }
 
-    private Command<D> decodeCommand(byte nextByte) {
-        MessageEncoderDecoder<Command<D>> decoder = codeToDecoder.get(opcode);
+    private Command<ExecutionInfo> decodeCommand(byte nextByte) {
+        MessageEncoderDecoder<Command<ExecutionInfo>> decoder = codeToDecoder.get(opcode);
         if (decoder == null) {
             throw new IllegalArgumentException("forbidden opcode " + opcode);
         } else {
