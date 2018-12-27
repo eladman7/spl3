@@ -9,8 +9,8 @@ public class PMDecoder<D> implements MessageEncoderDecoder<Command<D>> {
     private StringEncoderDecoder stringEncoderDecoder;
     private String toUsername;
 
-    public PMDecoder(StringEncoderDecoder stringEncoderDecoder) {
-        this.stringEncoderDecoder = stringEncoderDecoder;
+    public PMDecoder() {
+        this.stringEncoderDecoder = stringEncoderDecoder = new StringEncoderDecoder();
     }
 
     @Override

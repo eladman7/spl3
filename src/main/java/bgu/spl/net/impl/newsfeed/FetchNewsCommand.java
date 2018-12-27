@@ -12,8 +12,8 @@ public class FetchNewsCommand implements Command<NewsFeed> {
     }
 
     @Override
-    public Serializable execute(NewsFeed feed) {
-        return feed.fetch(channel);
+    public Serializable execute(NewsFeed db) {
+        return db.fetch(channel);
     }
 
 }

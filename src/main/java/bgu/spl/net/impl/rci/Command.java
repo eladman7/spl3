@@ -1,8 +1,8 @@
 package bgu.spl.net.impl.rci;
 
-import java.io.Serializable;
+import bgu.spl.net.api.Messages.Response;
 
-public interface Command<D> extends Serializable {
+public interface Command<D>{
     // T here is DBModels
-    Serializable execute(D arg);
+    Response execute(D db);
 }

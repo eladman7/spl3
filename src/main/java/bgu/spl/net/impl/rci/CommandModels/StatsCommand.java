@@ -12,7 +12,7 @@ public class StatsCommand<D> implements Command<D> {
     }
 
     @Override
-    public Serializable execute(D arg) {
+    public Serializable execute(D db) {
         return null;
     }
 }

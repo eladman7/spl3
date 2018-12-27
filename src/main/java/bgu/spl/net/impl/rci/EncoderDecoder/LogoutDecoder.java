@@ -6,7 +6,7 @@ import bgu.spl.net.impl.rci.CommandModels.LogoutCommand;
 
 public class LogoutDecoder<D> implements MessageEncoderDecoder<Command<D>> {
     @Override
-    public Command<D> decodeNextByte(byte nextByte) {
+    public LogoutCommand<D> decodeNextByte(byte nextByte) {
         return new LogoutCommand<>();
     }
 

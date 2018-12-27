@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class User {
     private final String username;
     private final String password;
-    private final AtomicBoolean connected;
+    private final AtomicBoolean loggedIn;
     private Queue<User> following;
     private Queue<User> followers;
     private Queue<Post> posted;
@@ -18,7 +18,7 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-        connected = new AtomicBoolean(false);
+        loggedIn = new AtomicBoolean(false);
         following = new ConcurrentLinkedQueue<>();
         followers = new ConcurrentLinkedQueue<>();
         posted = new ConcurrentLinkedQueue<>();
@@ -34,12 +34,12 @@ public class User {
         this.followers = followers;
     }
 
-    public boolean isConnected() {
-        return connected.get();
+    public boolean isLoggedIn() {
+        return loggedIn.get();
     }
 
-    public void setConnected(boolean connected) {
-        this.connected.set(connected);
+    public void setLoggedIn(boolean loggedIn) {
+        this.loggedIn.set(loggedIn);
     }
 
     public Queue<User> getFollowing() {

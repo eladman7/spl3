@@ -8,15 +8,41 @@ public class DB {
     private Queue<Post> posts;
     private Queue<PrivateMessage> privateMessages;
 
+    private final Object usersLock;
+    private final Object postsLock;
+    private final Object privateMessagesLock;
+
     public DB() {
         users = new ConcurrentLinkedQueue<>();
         posts = new ConcurrentLinkedQueue<>();
         privateMessages = new ConcurrentLinkedQueue<>();
+        usersLock = new Object();
+        postsLock = new Object();
+        privateMessagesLock = new Object();
+    }
 
+    public Object getUsersLock() {
+        return usersLock;
+    }
+
+    public Object getPostsLock() {
+        return postsLock;
+    }
+
+    public Object getPrivateMessagesLock() {
+        return privateMessagesLock;
     }
 
     public Queue<User> getUsers() {
         return users;
+    }
+    public User getUser(String username){
+        for (User user: users){
+            if (user.getUsername().equals(username)){
+                return user;
+            }
+        }
+        return null;
     }
 
     public void setUsers(Queue<User> users) {
@@ -37,5 +63,9 @@ public class DB {
 
     public void setPrivateMessages(Queue<PrivateMessage> privateMessages) {
         this.privateMessages = privateMessages;
+    }
+
+    public void addUser(String username, String password) {
+        users.add(new User(username, password));
     }
 }

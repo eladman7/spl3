@@ -1,8 +1,7 @@
 package bgu.spl.net.impl.rci.CommandModels;
 
+import bgu.spl.net.api.Messages.Response;
 import bgu.spl.net.impl.rci.Command;
-
-import java.io.Serializable;
 
 public class FollowCommand<D> implements Command<D> {
 
@@ -15,7 +14,7 @@ public class FollowCommand<D> implements Command<D> {
     }
 
     @Override
-    public Serializable execute(D arg) {
+    public Response execute(D db) {
         return null;
     }
 }
