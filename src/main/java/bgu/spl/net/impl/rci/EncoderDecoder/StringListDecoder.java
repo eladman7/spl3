@@ -22,25 +22,22 @@ public class StringListDecoder implements MessageEncoderDecoder<String[]> {
                 size = code;
                 strings = new String[size];
             }
-            return null;
-
         } else{ // list part
-
             if (nextStringIndex == size){ // finished
                 String[] result = duplicate(strings);
                 strings = null;
                 size = -1;
                 nextStringIndex = 0;
                 return result;
-            }else{
-                String next = stringEncoderDecoder.decodeNextByte(nextByte);
-                if (next != null){
-                    strings[nextStringIndex] = next;
-                    nextStringIndex++;
-                }
-                return null;
             }
+            String next = stringEncoderDecoder.decodeNextByte(nextByte);
+            if (next != null){
+                strings[nextStringIndex] = next;
+                nextStringIndex++;
+            }
+
         }
+        return null;
 
     }
     private String[] duplicate(String[] src){

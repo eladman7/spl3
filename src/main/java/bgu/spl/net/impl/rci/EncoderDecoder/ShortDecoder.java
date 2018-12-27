@@ -15,15 +15,13 @@ public class ShortDecoder implements MessageEncoderDecoder<Integer> {
 
     @Override
     public Integer decodeNextByte(byte nextByte) {
-            codeBuffer.put(nextByte);
-
-            if (!codeBuffer.hasRemaining()) {// just finished code part
-                int code = codeBuffer.getInt(); // todo debug on this point see that it works
-                codeBuffer.flip();
-                return code;
-            }else {
-                return null;
-            }
+        codeBuffer.put(nextByte);
+        if (!codeBuffer.hasRemaining()) {// just finished code part
+            int code = codeBuffer.getInt(); // todo debug on this point see that it works
+            codeBuffer.flip();
+            return code;
+        }
+        return null;
     }
 
     @Override

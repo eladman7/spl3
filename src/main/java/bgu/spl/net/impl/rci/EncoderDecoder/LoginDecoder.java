@@ -15,11 +15,10 @@ public class LoginDecoder<D> implements MessageEncoderDecoder<Command<D>> {
     @Override
     public Command<D> decodeNextByte(byte nextByte) {
         RegisterCommand<D> registerCmd = userPassHelper.decodeNextByte(nextByte);
-        if (registerCmd == null){ // decoding not finished
-            return null;
-        }else { // ready
+        if (registerCmd != null){
             return new LoginCommand<>(registerCmd.getUsername(), registerCmd.getPassword());
         }
+        return null;
     }
 
     @Override

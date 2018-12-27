@@ -16,21 +16,18 @@ public class RegisterDecoder<D> implements MessageEncoderDecoder<Command<D>> {
     public RegisterCommand<D> decodeNextByte(byte nextByte) {
         if (this.username == null){ // still reading username
             String username = stringEncoderDecoder.decodeNextByte(nextByte);
-            if (username == null){ // still reading username
-                return null;
-            }else { // got first 0 byte
+            if (username != null){
                 this.username = username;
-                return null;
             }
         }else { // reading password
             String password = stringEncoderDecoder.decodeNextByte(nextByte);
-            if (password == null){ // still reading pass
-                return null;
-            }else { // got second 0 byte, finish
+            if (password != null){ // finish
+                String user = this.username;
                 this.username = null;
-                return new RegisterCommand<>(username, password);
+                return new RegisterCommand<>(user, password);
             }
         }
+        return null;
     }
 
     @Override

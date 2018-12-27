@@ -20,15 +20,14 @@ public class FollowDecoder<D> implements MessageEncoderDecoder<Command<D>> {
         if (!followFound){
             this.follow = (nextByte == 0);
             followFound = true;
-            return null;
         }else {
             String[] users = stringListDecoder.decodeNextByte(nextByte);
             if (users != null){
                 followFound = false;
                 return new FollowCommand<>(users, follow);
             }
-            return null;
         }
+        return null;
     }
 
 
