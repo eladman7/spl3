@@ -14,7 +14,8 @@ public class LoginDecoder<D> implements MessageEncoderDecoder<Command<D>> {
 
     @Override
     public Command<D> decodeNextByte(byte nextByte) {
-        RegisterCommand<D> registerCmd = userPassHelper.decodeNextByte(nextByte);
+        Command<D> cmd = userPassHelper.decodeNextByte(nextByte);
+        RegisterCommand<D> registerCmd = (RegisterCommand<D>) cmd;
         if (registerCmd != null){
             return new LoginCommand<>(registerCmd.getUsername(), registerCmd.getPassword());
         }

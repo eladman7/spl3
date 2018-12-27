@@ -13,7 +13,7 @@ public class RegisterDecoder<D> implements MessageEncoderDecoder<Command<D>> {
     }
 
     @Override
-    public RegisterCommand<D> decodeNextByte(byte nextByte) {
+    public Command<D> decodeNextByte(byte nextByte) {
         if (this.username == null){ // still reading username
             String username = stringEncoderDecoder.decodeNextByte(nextByte);
             if (username != null){
@@ -24,7 +24,7 @@ public class RegisterDecoder<D> implements MessageEncoderDecoder<Command<D>> {
             if (password != null){ // finish
                 String user = this.username;
                 this.username = null;
-                return new RegisterCommand<>(user, password);
+                return new RegisterCommand(user, password);
             }
         }
         return null;

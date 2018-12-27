@@ -1,6 +1,7 @@
 package bgu.spl.net.impl.rci;
 
 import bgu.spl.net.api.MessageContainer;
+import bgu.spl.net.api.Messages.Response;
 import bgu.spl.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl.net.api.bidi.Connections;
 
@@ -31,8 +32,9 @@ public class RemoteCommandInvocationProtocol<T extends MessageContainer,D> imple
     @Override
     public void process(T msg) {
         Command<D> cmd = msg.getCommand();
-        Serializable executionResult = cmd.execute(arg);
-        msg.setResult(executionResult);
+        Response executionResult = cmd.execute(arg);
+        Serializable result = null;
+        msg.setResult(result);
         connections.send(connectionId, msg);
     }
 
