@@ -27,6 +27,6 @@ public class ShortDecoder implements MessageEncoderDecoder<Short> {
 
     @Override
     public byte[] encode(Short message) {
-        return ByteBuffer.allocate(4).putInt(message).array();
+        return ByteBuffer.allocate(2).putShort(message).array();
     }
 }

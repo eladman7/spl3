@@ -27,7 +27,7 @@ public class UserListDecoder implements MessageEncoderDecoder<MessageContainer> 
         List<String> userNames = (List<String>) message.getAdditionalData();
         // add num of users param
         userListCommandBytes.addAll(Arrays.asList(MessageContainerEncoderDecoder.getBoxingArray(
-                ByteBuffer.allocate(4).putInt(userNames.size()).array())));
+                ByteBuffer.allocate(2).putShort((short)userNames.size()).array())));
         userNames.forEach(userName -> userListCommandBytes.addAll(Arrays.asList(
                 MessageContainerEncoderDecoder.getBoxingArray(userName.getBytes()))));
         return MessageContainerEncoderDecoder.getUnboxingArray(userListCommandBytes);
