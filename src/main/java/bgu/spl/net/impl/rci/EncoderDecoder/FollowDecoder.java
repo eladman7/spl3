@@ -1,12 +1,16 @@
 package bgu.spl.net.impl.rci.EncoderDecoder;
 
+import bgu.spl.net.api.MessageContainer;
 import bgu.spl.net.api.MessageEncoderDecoder;
 import bgu.spl.net.impl.rci.Command;
 import bgu.spl.net.impl.rci.CommandModels.FollowCommand;
 import bgu.spl.net.impl.rci.ExecutionInfo;
 
+import java.util.LinkedList;
+import java.util.List;
 
-public class FollowDecoder implements MessageEncoderDecoder<Command<ExecutionInfo>> {
+
+public class FollowDecoder implements MessageEncoderDecoder<MessageContainer> {
     private boolean follow;
     private boolean followFound = false;
     private StringListDecoder stringListDecoder;
@@ -16,7 +20,8 @@ public class FollowDecoder implements MessageEncoderDecoder<Command<ExecutionInf
     }
 
     @Override
-    public Command<ExecutionInfo> decodeNextByte(byte nextByte) {
+    public MessageContainer decodeNextByte(byte nextByte) {
+        MessageContainer messageContainer = new MessageContainer();
         if (!followFound){
             this.follow = (nextByte == 0);
             followFound = true;
@@ -24,7 +29,8 @@ public class FollowDecoder implements MessageEncoderDecoder<Command<ExecutionInf
             String[] users = stringListDecoder.decodeNextByte(nextByte);
             if (users != null){
                 followFound = false;
-                return new FollowCommand(users, follow);
+                messageContainer.setCommand(new FollowCommand(users, follow));
+                return messageContainer;
             }
         }
         return null;
@@ -32,8 +38,9 @@ public class FollowDecoder implements MessageEncoderDecoder<Command<ExecutionInf
 
 
     @Override
-    public byte[] encode(Command<ExecutionInfo> message) {
-        return new byte[0];
+    public byte[] encode(MessageContainer message) {
+        List<Byte> encodedMessage = new LinkedList<>();
+        return MessageContainerEncoderDecoder.getUnboxingArray(encodedMessage);
     }
 }
 

@@ -4,28 +4,29 @@ import bgu.spl.net.api.MessageContainer;
 import bgu.spl.net.api.MessageEncoderDecoder;
 import bgu.spl.net.impl.rci.Command;
 import bgu.spl.net.impl.rci.ExecutionInfo;
+import sun.tools.tree.BinaryArithmeticExpression;
 
 import java.nio.ByteBuffer;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<MessageContainer> {
     private int opcode = -1;
-    private Map<Integer, MessageEncoderDecoder<Command<ExecutionInfo>>> codeToDecoder;
+    private Map<Short, MessageEncoderDecoder<MessageContainer>> codeToDecoder;
     private ShortDecoder shortDecoder;
 
     public MessageContainerEncoderDecoder() {
         shortDecoder = new ShortDecoder();
 
         codeToDecoder = new HashMap<>();
-        codeToDecoder.put(1, new RegisterDecoder());
-        codeToDecoder.put(2, new LoginDecoder());
-        codeToDecoder.put(3, new LogoutDecoder());
-        codeToDecoder.put(4, new FollowDecoder());
-        codeToDecoder.put(5, new PostDecoder());
-        codeToDecoder.put(6, new PMDecoder());
-        codeToDecoder.put(7, new UserListDecoder());
-        codeToDecoder.put(8, new StatsDecoder());
+        codeToDecoder.put((short) 1, new RegisterDecoder());
+        codeToDecoder.put((short) 2, new LoginDecoder());
+        codeToDecoder.put((short) 3, new LogoutDecoder());
+        codeToDecoder.put((short) 4, new FollowDecoder());
+        codeToDecoder.put((short) 5, new PostDecoder());
+        codeToDecoder.put((short) 6, new PMDecoder());
+        codeToDecoder.put((short) 7, new UserListDecoder());
+        codeToDecoder.put((short) 8, new StatsDecoder());
     }
 
     /**
@@ -38,28 +39,26 @@ public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<Mes
     public MessageContainer decodeNextByte(byte nextByte) {
         if (opcode == -1) { // still in opcode part
             Short code = shortDecoder.decodeNextByte(nextByte);
-            if (code != null){
+            if (code != null) {
                 this.opcode = code;
             }
             return null;
         } else { // we are in the data part
 
-            Command<ExecutionInfo> cmd = decodeCommand(nextByte);
+            MessageContainer messageContainer = decodeCommand(nextByte);
 
-            if (cmd == null) {
+            if (messageContainer.getCommand() == null) {
                 return null;
             } else {
                 opcode = -1;
-                MessageContainer messageContainer = new MessageContainer();
-                messageContainer.setCommand(cmd);
                 return messageContainer;
             }
         }
 
     }
 
-    private Command<ExecutionInfo> decodeCommand(byte nextByte) {
-        MessageEncoderDecoder<Command<ExecutionInfo>> decoder = codeToDecoder.get(opcode);
+    private MessageContainer decodeCommand(byte nextByte) {
+        MessageEncoderDecoder<MessageContainer> decoder = codeToDecoder.get(opcode);
         if (decoder == null) {
             throw new IllegalArgumentException("forbidden opcode " + opcode);
         } else {
@@ -78,7 +77,49 @@ public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<Mes
      */
     @Override
     public byte[] encode(MessageContainer message) {
+        List<Byte> encodedBytes = new LinkedList<>();
+        ShortDecoder shortDecoder = new ShortDecoder();
+        Byte oneInByte = (byte) 1;
+        Byte zeroInByte = (byte) 0;
+        // handle notification
+        if (message.getType() == MessageContainer.Type.NOTIFICATION) {
+            encodedBytes.addAll(Arrays.asList(getBoxingArray(shortDecoder.encode((short) 12))));
+            if (message.isPm()) {
+                encodedBytes.add(zeroInByte);
+            } else {
+                encodedBytes.add(oneInByte);
+            }
+            StringEncoderDecoder encoderDecoder = new StringEncoderDecoder();
+            encodedBytes.addAll(Arrays.asList(getBoxingArray(encoderDecoder.encode(message.getFromUsername()))));
+            encodedBytes.add(zeroInByte);
+            encodedBytes.addAll(Arrays.asList(getBoxingArray(encoderDecoder.encode(message.getFromUsername()))));
+            encodedBytes.add(zeroInByte);
+        } else {
+            if (message.getType() == MessageContainer.Type.ACK) {
+                encodedBytes.addAll(Arrays.asList(getBoxingArray(shortDecoder.encode((short) 10))));
+            } else if (message.getType() == MessageContainer.Type.ERROR) {
+                encodedBytes.addAll(Arrays.asList(getBoxingArray(shortDecoder.encode((short) 11))));
+            }
+            // encode specific command data
+            encodedBytes.addAll(Arrays.asList(getBoxingArray(codeToDecoder.get(message.getOriginOpcode())
+                    .encode(message))));
+        }
+        return getUnboxingArray(encodedBytes);
+    }
 
-        return new byte[0];
+    public static byte[] getUnboxingArray(List<Byte> bytes) {
+        byte[] finalArr = new byte[bytes.size()];
+        int j = 0;
+        for (Byte b : bytes)
+            finalArr[j++] = b;
+        return finalArr;
+    }
+
+    public static Byte[] getBoxingArray(byte[] bytesArr) {
+        Byte[] bytes = new Byte[bytesArr.length];
+        int i = 0;
+        for (byte b : bytes)
+            bytes[i++] = b;
+        return bytes;
     }
 }

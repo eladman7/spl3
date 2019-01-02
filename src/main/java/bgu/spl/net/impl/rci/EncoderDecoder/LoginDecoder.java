@@ -7,7 +7,7 @@ import bgu.spl.net.impl.rci.CommandModels.LoginCommand;
 import bgu.spl.net.impl.rci.CommandModels.RegisterCommand;
 import bgu.spl.net.impl.rci.ExecutionInfo;
 
-public class LoginDecoder implements MessageEncoderDecoder<Command<ExecutionInfo>> {
+public class LoginDecoder implements MessageEncoderDecoder<MessageContainer> {
     private RegisterDecoder userPassHelper;
 
     public LoginDecoder() {
@@ -15,18 +15,23 @@ public class LoginDecoder implements MessageEncoderDecoder<Command<ExecutionInfo
     }
 
     @Override
-    public Command<ExecutionInfo> decodeNextByte(byte nextByte) {
-        Command cmd = userPassHelper.decodeNextByte(nextByte);
-        RegisterCommand registerCmd = (RegisterCommand) cmd;
-        if (registerCmd != null){
-            return new LoginCommand(registerCmd.getUsername(), registerCmd.getPassword());
+    public MessageContainer decodeNextByte(byte nextByte) {
+        MessageContainer result = new MessageContainer();
+
+        MessageContainer messageContainer = userPassHelper.decodeNextByte(nextByte);
+        if (messageContainer != null) {
+            RegisterCommand registerCmd = (RegisterCommand) messageContainer.getCommand();
+            result.setCommand(new LoginCommand(registerCmd.getUsername(), registerCmd.getPassword()));
+            return result;
         }
+
         return null;
     }
 
     @Override
-    public byte[] encode(Command<ExecutionInfo> message) {
-        return new byte[0];
+    public byte[] encode(MessageContainer message) {
+        //todo:
+        return null;
     }
 }
 

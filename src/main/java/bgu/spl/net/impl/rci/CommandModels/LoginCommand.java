@@ -23,7 +23,7 @@ public class LoginCommand extends Responder implements Command<ExecutionInfo> {
         if (user != null && password.equals(user.getPassword()) && !user.isLoggedIn()){
             user.setLoggedIn(true);
             user.setConnectionId(execInfo.getConnId());
-            ack(execInfo, opcode, null);
+            ack(execInfo, opcode, null, this);
         }else {
             error(execInfo, opcode);
         }

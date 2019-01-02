@@ -1,14 +1,14 @@
 package bgu.spl.net.impl.rci.CommandModels;
 
 
-import bgu.spl.net.api.MessageContainer;
-import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.impl.rci.Command;
 import bgu.spl.net.impl.rci.DBModels.DB;
 import bgu.spl.net.impl.rci.DBModels.User;
 import bgu.spl.net.impl.rci.ExecutionInfo;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Queue;
+import java.util.Set;
 
 
 public class PostCommand extends Responder implements Command<ExecutionInfo> {
@@ -32,7 +32,7 @@ public class PostCommand extends Responder implements Command<ExecutionInfo> {
             updateTagged(db, toNotifyConnIds);
 
             for(int connId: toNotifyConnIds){
-                notifyPublic(execInfo, me.getUsername(), connId, postMessage);
+                notifyPublic(execInfo, me.getUsername(), connId, postMessage, this);
             }
             // todo ack here?
         }else {

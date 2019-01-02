@@ -22,7 +22,7 @@ public class PMCommand extends Responder implements Command<ExecutionInfo> {
         User to = db.getUser(toUsername);
         User me = db.getUser(execInfo.getConnId());
         if (me.isLoggedIn() && to != null){
-            notifyPrivate(execInfo, me.getUsername(), to.getConnectionId(), message);
+            notifyPrivate(execInfo, me.getUsername(), to.getConnectionId(), message, this);
             db.addPrivateMessage(message, me, to);
             // todo ack here?
         }else {

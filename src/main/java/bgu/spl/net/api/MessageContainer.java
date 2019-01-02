@@ -8,6 +8,7 @@ public class MessageContainer{
         ACK, ERROR, NOTIFICATION;
     }
 
+    private boolean pm;
     private Command<ExecutionInfo> command;
     private Type type;
     private String error;
@@ -15,6 +16,14 @@ public class MessageContainer{
     private short originOpcode;
     private String fromUsername;
     private String content;
+
+    public boolean isPm() {
+        return pm;
+    }
+
+    public void setPm(boolean pm) {
+        this.pm = pm;
+    }
 
     public String getFromUsername() {
         return fromUsername;

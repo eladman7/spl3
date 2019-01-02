@@ -1,11 +1,12 @@
 package bgu.spl.net.impl.rci.EncoderDecoder;
 
+import bgu.spl.net.api.MessageContainer;
 import bgu.spl.net.api.MessageEncoderDecoder;
 import bgu.spl.net.impl.rci.Command;
 import bgu.spl.net.impl.rci.CommandModels.StatsCommand;
 import bgu.spl.net.impl.rci.ExecutionInfo;
 
-public class StatsDecoder implements MessageEncoderDecoder<Command<ExecutionInfo>> {
+public class StatsDecoder implements MessageEncoderDecoder<MessageContainer> {
 
     private StringEncoderDecoder stringEncoderDecoder;
 
@@ -14,16 +15,18 @@ public class StatsDecoder implements MessageEncoderDecoder<Command<ExecutionInfo
     }
 
     @Override
-    public Command<ExecutionInfo> decodeNextByte(byte nextByte) {
+    public MessageContainer decodeNextByte(byte nextByte) {
+        MessageContainer messageContainer = new MessageContainer();
         String username = stringEncoderDecoder.decodeNextByte(nextByte);
-        if (username != null){
-            return new StatsCommand(username);
+        if (username != null) {
+            messageContainer.setCommand(new StatsCommand(username));
+            return messageContainer;
         }
         return null;
     }
 
     @Override
-    public byte[] encode(Command<ExecutionInfo> cmd) {
+    public byte[] encode(MessageContainer cmd) {
         return new byte[0];
     }
 }

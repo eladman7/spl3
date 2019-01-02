@@ -51,7 +51,7 @@ public class FollowCommand extends Responder implements Command<ExecutionInfo> {
 
         if (newToFollow.size() > 0){
             List<String> toFollowNames = usersToNames(newToFollow);
-            ack(execInfo, opcode, toFollowNames);
+            ack(execInfo, opcode, toFollowNames, this);
         }else {
             error(execInfo, opcode);
         }

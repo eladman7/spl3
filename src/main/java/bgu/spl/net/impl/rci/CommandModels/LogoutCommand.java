@@ -21,7 +21,7 @@ public class LogoutCommand extends Responder implements Command<ExecutionInfo>{
             user.setLoggedIn(false);
             user.setConnectionId(-1);
             connections.disconnect(execInfo.getConnId());
-            ack(execInfo, opcode, null);
+            ack(execInfo, opcode, null, this);
         }else {
             error(execInfo, opcode);
         }

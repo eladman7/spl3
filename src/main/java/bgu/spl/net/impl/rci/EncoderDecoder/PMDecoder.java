@@ -1,11 +1,12 @@
 package bgu.spl.net.impl.rci.EncoderDecoder;
 
+import bgu.spl.net.api.MessageContainer;
 import bgu.spl.net.api.MessageEncoderDecoder;
 import bgu.spl.net.impl.rci.Command;
 import bgu.spl.net.impl.rci.CommandModels.PMCommand;
 import bgu.spl.net.impl.rci.ExecutionInfo;
 
-public class PMDecoder implements MessageEncoderDecoder<Command<ExecutionInfo>> {
+public class PMDecoder implements MessageEncoderDecoder<MessageContainer> {
 
     private StringEncoderDecoder stringEncoderDecoder;
     private String toUsername;
@@ -15,19 +16,21 @@ public class PMDecoder implements MessageEncoderDecoder<Command<ExecutionInfo>> 
     }
 
     @Override
-    public Command<ExecutionInfo> decodeNextByte(byte nextByte) {
+    public MessageContainer decodeNextByte(byte nextByte) {
+        MessageContainer messageContainer = new MessageContainer();
         toUsername = stringEncoderDecoder.decodeNextByte(nextByte);
-        if (toUsername != null){
+        if (toUsername != null) {
             String message = stringEncoderDecoder.decodeNextByte(nextByte);
-            if (message != null){
-                return new PMCommand(toUsername, message);
+            if (message != null) {
+                messageContainer.setCommand(new PMCommand(toUsername, message));
+                return messageContainer;
             }
         }
         return null;
     }
 
     @Override
-    public byte[] encode(Command<ExecutionInfo> cmd) {
+    public byte[] encode(MessageContainer cmd) {
         return new byte[0];
     }
 }
