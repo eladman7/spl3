@@ -92,6 +92,7 @@ public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<Mes
             } else if (message.getType() == MessageContainer.Type.ERROR) {
                 encodedBytes.addAll(Arrays.asList(getBoxingArray(shortDecoder.encode((short) 11))));
             }
+            encodedBytes.addAll(Arrays.asList(getBoxingArray(shortDecoder.encode(message.getOriginOpcode()))));
             // encode specific command data
             encodedBytes.addAll(Arrays.asList(getBoxingArray(codeToDecoder.get(message.getOriginOpcode())
                     .encode(message))));
