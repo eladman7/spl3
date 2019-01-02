@@ -27,6 +27,7 @@ public class RegisterDecoder implements MessageEncoderDecoder<MessageContainer> 
                 RegisterCommand registerCommand = new RegisterCommand(user, password);
                 MessageContainer messageContainer = new MessageContainer();
                 messageContainer.setCommand(registerCommand);
+                return messageContainer;
             }
         }
         return null;
