@@ -17,8 +17,8 @@ public class RegisterCommand extends Responder implements Command<ExecutionInfo>
 
     @Override
     public void execute(ExecutionInfo execInfo) {
+        System.out.println("inside RegisterCommand.execute()");
         DB db = execInfo.getDb();
-
         synchronized (db.getUsersLock()) {
             if (db.getUser(username) == null) {
                 db.addUser(username, password);

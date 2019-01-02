@@ -83,4 +83,18 @@ public class MessageContainer{
     public void setCommand(Command<ExecutionInfo> command) {
         this.command = command;
     }
+
+    @Override
+    public String toString() {
+        return "MessageContainer{" +
+                "pm=" + pm +
+                ", command=" + command +
+                ", type=" + type +
+                ", error='" + error + '\'' +
+                ", additionalData=" + additionalData +
+                ", originOpcode=" + originOpcode +
+                ", fromUsername='" + fromUsername + '\'' +
+                ", content='" + content + '\'' +
+                '}';
+    }
 }

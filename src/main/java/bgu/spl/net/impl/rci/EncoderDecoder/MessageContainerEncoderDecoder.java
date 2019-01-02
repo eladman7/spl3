@@ -32,6 +32,7 @@ public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<Mes
      */
     @Override
     public MessageContainer decodeNextByte(byte nextByte) {
+        System.out.println("inside MessageContainerEncoderDecoder.decodeNextByte()");
         if (opcode == -1) { // still in opcode part
             Short code = shortDecoder.decodeNextByte(nextByte);
             if (code != null) {
@@ -40,7 +41,6 @@ public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<Mes
         } else { // we are in the data part
 
             MessageContainer messageContainer = decodeCommand(nextByte);
-
             if (messageContainer != null) {
                 opcode = -1;
                 return messageContainer;
@@ -111,7 +111,7 @@ public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<Mes
     public static Byte[] getBoxingArray(byte[] bytesArr) {
         Byte[] bytes = new Byte[bytesArr.length];
         int i = 0;
-        for (byte b : bytes)
+        for (byte b : bytesArr)
             bytes[i++] = b;
         return bytes;
     }
