@@ -37,23 +37,20 @@ public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<Mes
             if (code != null) {
                 this.opcode = code;
             }
-            return null;
         } else { // we are in the data part
 
             MessageContainer messageContainer = decodeCommand(nextByte);
 
-            if (messageContainer.getCommand() == null) {
-                return null;
-            } else {
+            if (messageContainer != null) {
                 opcode = -1;
                 return messageContainer;
             }
         }
-
+        return null;
     }
 
     private MessageContainer decodeCommand(byte nextByte) {
-        MessageEncoderDecoder<MessageContainer> decoder = codeToDecoder.get(opcode);
+        MessageEncoderDecoder<MessageContainer> decoder = codeToDecoder.get((short) opcode);
         if (decoder == null) {
             throw new IllegalArgumentException("forbidden opcode " + opcode);
         } else {
