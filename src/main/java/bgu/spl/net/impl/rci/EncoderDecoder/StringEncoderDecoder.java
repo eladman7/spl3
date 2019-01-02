@@ -24,7 +24,13 @@ public class StringEncoderDecoder implements MessageEncoderDecoder<String> {
 
     @Override
     public byte[] encode(String message) {
-        return (message + "\n").getBytes(StandardCharsets.UTF_8);
+        byte[] bytes = message.getBytes(StandardCharsets.UTF_8);
+        byte[] bytes1 = new byte[bytes.length + 1];
+        for (int i = 0; i < bytes.length; i++) {
+            bytes1[i] = bytes[i];
+        }
+        bytes1[bytes.length] = (byte) 0;
+        return bytes1;
     }
 
     private void pushByte(byte nextByte) {
