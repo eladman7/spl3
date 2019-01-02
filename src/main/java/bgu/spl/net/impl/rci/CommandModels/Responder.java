@@ -2,7 +2,6 @@ package bgu.spl.net.impl.rci.CommandModels;
 
 import bgu.spl.net.api.MessageContainer;
 import bgu.spl.net.api.bidi.Connections;
-import bgu.spl.net.impl.rci.DBModels.User;
 import bgu.spl.net.impl.rci.ExecutionInfo;
 
 public class Responder {

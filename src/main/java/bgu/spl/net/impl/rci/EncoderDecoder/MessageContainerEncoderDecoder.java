@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<MessageContainer> {
-    private final ByteBuffer opCodeBuffer = ByteBuffer.allocate(2);
     private int opcode = -1;
     private Map<Integer, MessageEncoderDecoder<Command<ExecutionInfo>>> codeToDecoder;
     private ShortDecoder shortDecoder;
@@ -38,7 +37,7 @@ public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<Mes
     @Override
     public MessageContainer decodeNextByte(byte nextByte) {
         if (opcode == -1) { // still in opcode part
-            Integer code = shortDecoder.decodeNextByte(nextByte);
+            Short code = shortDecoder.decodeNextByte(nextByte);
             if (code != null){
                 this.opcode = code;
             }
@@ -51,7 +50,6 @@ public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<Mes
                 return null;
             } else {
                 opcode = -1;
-                opCodeBuffer.clear();
                 MessageContainer messageContainer = new MessageContainer();
                 messageContainer.setCommand(cmd);
                 return messageContainer;

@@ -17,7 +17,7 @@ public class StringListDecoder implements MessageEncoderDecoder<String[]> {
     @Override
     public String[] decodeNextByte(byte nextByte) {
         if (size == -1) { // still in size part
-            Integer code = shortDecoder.decodeNextByte(nextByte);
+            Short code = shortDecoder.decodeNextByte(nextByte);
             if (code != null){
                 size = code;
                 strings = new String[size];

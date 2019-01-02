@@ -27,8 +27,4 @@ public class ConnectionsImpl<T> implements Connections<T> {
 
     }
 
-//    public void addConnection(int connectionId, ConnectionHandler<MessageContainer> connectionHandler) {
-//        clientsMap.put(connectionId, connectionHandler);
-//    }
-
 }
