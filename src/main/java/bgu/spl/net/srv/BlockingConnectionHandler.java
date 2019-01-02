@@ -16,12 +16,14 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
     private final Socket sock;
     private BufferedInputStream in;
     private BufferedOutputStream out;
+    private final Object outLock;
     private volatile boolean connected = true;
 
     public BlockingConnectionHandler(Socket sock, MessageEncoderDecoder<T> reader, BidiMessagingProtocol<T> protocol) {
         this.sock = sock;
         this.encdec = reader;
         this.protocol = protocol;
+        outLock = new Object();
     }
 
     @Override
@@ -54,8 +56,10 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
     @Override
     public void send(T msg) {
         try {
-            out.write(encdec.encode(msg));
-            out.flush();
+            synchronized (outLock){
+                out.write(encdec.encode(msg));
+                out.flush();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
