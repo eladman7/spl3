@@ -15,19 +15,23 @@ public class ConnectionsImpl<T> implements Connections<T> {
     @Override
     public boolean send(int connectionId, T msg) {
         synchronized (lockMap) {
-            clientsMap.get(connectionId).send(msg);
+            if (clientsMap.containsKey(connectionId)) {
+                clientsMap.get(connectionId).send(msg);
+                return true;
+            } else return false;
         }
-        return true;
     }
 
     @Override
     public void broadcast(T msg) {
-
+        synchronized (lockMap) {
+            clientsMap.values().forEach(value -> value.send(msg));
+        }
     }
 
     @Override
     public void disconnect(int connectionId) {
-        synchronized (clientsMap.get(connectionId)) {
+        synchronized (lockMap) {
             clientsMap.remove(connectionId);
         }
     }
