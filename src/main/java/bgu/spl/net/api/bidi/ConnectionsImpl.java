@@ -6,6 +6,7 @@ import java.util.Map;
 
 public class ConnectionsImpl<T> implements Connections<T> {
     private Map<Integer, ConnectionHandler<T>> clientsMap;
+    private final Object lockMap = new Object();
 
     public ConnectionsImpl(Map<Integer, ConnectionHandler<T>> clientsMap) {
         this.clientsMap = clientsMap;
@@ -13,7 +14,9 @@ public class ConnectionsImpl<T> implements Connections<T> {
 
     @Override
     public boolean send(int connectionId, T msg) {
-        clientsMap.get(connectionId).send(msg);
+        synchronized (lockMap) {
+            clientsMap.get(connectionId).send(msg);
+        }
         return true;
     }
 
@@ -24,7 +27,9 @@ public class ConnectionsImpl<T> implements Connections<T> {
 
     @Override
     public void disconnect(int connectionId) {
-
+        synchronized (clientsMap.get(connectionId)) {
+            clientsMap.remove(connectionId);
+        }
     }
 
 }
