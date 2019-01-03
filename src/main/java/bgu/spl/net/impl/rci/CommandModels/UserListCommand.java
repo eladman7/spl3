@@ -19,7 +19,7 @@ public class UserListCommand extends Responder implements Command<ExecutionInfo>
             List<String> userNames = db.getUsers().stream()
                     .map(User::getUsername)
                     .collect(Collectors.toList());
-            ack(execInfo, opcode, userNames, this);
+            ack(execInfo, opcode, userNames.toArray(), this);
         } else {
             error(execInfo, opcode);
         }

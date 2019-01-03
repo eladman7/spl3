@@ -5,12 +5,19 @@ import bgu.spl.net.api.MessageEncoderDecoder;
 import bgu.spl.net.impl.rci.CommandModels.UserListCommand;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class UserListDecoder implements MessageEncoderDecoder<MessageContainer> {
+    private ShortDecoder shortEncoder;
+    private StringListDecoder stringListEncoder;
 
+    public UserListDecoder() {
+        shortEncoder = new ShortDecoder();
+        stringListEncoder = new StringListDecoder();
+    }
 
     @Override
     public MessageContainer decodeNextByte(byte nextByte) {
@@ -21,14 +28,24 @@ public class UserListDecoder implements MessageEncoderDecoder<MessageContainer> 
 
     @Override
     public byte[] encode(MessageContainer message) {
-        List<Byte> userListCommandBytes = new LinkedList<>();
-        List<String> userNames = (List<String>) message.getAdditionalData();
-        // add num of users param
-        userListCommandBytes.addAll(Arrays.asList(MessageContainerEncoderDecoder.getBoxingArray(
-                ByteBuffer.allocate(2).putShort((short)userNames.size()).array())));
-        userNames.forEach(userName -> userListCommandBytes.addAll(Arrays.asList(
-                MessageContainerEncoderDecoder.getBoxingArray(userName.getBytes()))));
-        return MessageContainerEncoderDecoder.getUnboxingArray(userListCommandBytes);
+        List<Byte> encodedBytes = new LinkedList<>();
+        Object[] _userNames = (Object[]) message.getAdditionalData();
+//        List<String> userNames = new ArrayList<>();
+//        for (Object o: _userNames){
+//            userNames.add((String) o);
+//        }
+//        String[] userNames1 = (String[]) userNames.toArray();
+
+
+        String[] userNames = Arrays.asList(_userNames).toArray(new String[_userNames.length]);
+        // add num of users and users
+        byte[] encodedSize = shortEncoder.encode((short) userNames.length);
+        byte[] encodedNames = stringListEncoder.encode(userNames);
+
+        MessageContainerEncoderDecoder.addBytesToList(encodedBytes, encodedSize);
+        MessageContainerEncoderDecoder.addBytesToList(encodedBytes, encodedNames);
+
+        return MessageContainerEncoderDecoder.getUnboxingArray(encodedBytes);
     }
 
 }
