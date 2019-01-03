@@ -6,19 +6,15 @@ import java.nio.ByteBuffer;
 
 public class ShortDecoder implements MessageEncoderDecoder<Short> {
     private final ByteBuffer codeBuffer = ByteBuffer.allocate(2);
-    // todo elad why is it like this?
 
-    public ShortDecoder() {
-        // todo elad and not like this?
-        // codeBuffer = ByteBuffer.allocate(2);
-    }
+    public ShortDecoder() {}
 
     @Override
     public Short decodeNextByte(byte nextByte) {
         codeBuffer.put(nextByte);
         if (!codeBuffer.hasRemaining()) {// just finished code part
             codeBuffer.rewind();
-            short code = codeBuffer.getShort(); // todo debug on this point see that it works
+            short code = codeBuffer.getShort();
             codeBuffer.clear();
             return code;
         }

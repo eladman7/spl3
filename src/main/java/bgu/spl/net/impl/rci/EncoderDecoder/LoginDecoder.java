@@ -2,10 +2,8 @@ package bgu.spl.net.impl.rci.EncoderDecoder;
 
 import bgu.spl.net.api.MessageContainer;
 import bgu.spl.net.api.MessageEncoderDecoder;
-import bgu.spl.net.impl.rci.Command;
 import bgu.spl.net.impl.rci.CommandModels.LoginCommand;
 import bgu.spl.net.impl.rci.CommandModels.RegisterCommand;
-import bgu.spl.net.impl.rci.ExecutionInfo;
 
 public class LoginDecoder implements MessageEncoderDecoder<MessageContainer> {
     private RegisterDecoder userPassHelper;

@@ -7,7 +7,7 @@ import java.util.List;
 
 public class StringListDecoder implements MessageEncoderDecoder<String[]> {
     private String[] strings = null;
-    private int size = -1;
+    private Short size = null;
     private int nextStringIndex = 0;
     private ShortDecoder shortDecoder;
     private StringEncoderDecoder stringEncoderDecoder;
@@ -19,22 +19,23 @@ public class StringListDecoder implements MessageEncoderDecoder<String[]> {
 
     @Override
     public String[] decodeNextByte(byte nextByte) {
-        if (size == -1) { // still in size part
-            Short code = shortDecoder.decodeNextByte(nextByte);
-            if (code != null){
-                size = code;
-                strings = new String[size];
+        if (size == null) { // still in size part
+            Short listSize = shortDecoder.decodeNextByte(nextByte);
+            if (listSize != null) {
+                size = listSize;
+                strings = new String[listSize];
             }
-        } else{ // list part
-            if (nextStringIndex == size){ // finished
+        } else { // list part
+            if (nextStringIndex == size) { // finished
                 String[] result = duplicate(strings);
                 strings = null;
-                size = -1;
+                size = null;
                 nextStringIndex = 0;
                 return result;
             }
+
             String next = stringEncoderDecoder.decodeNextByte(nextByte);
-            if (next != null){
+            if (next != null) {
                 strings[nextStringIndex] = next;
                 nextStringIndex++;
             }
@@ -43,16 +44,17 @@ public class StringListDecoder implements MessageEncoderDecoder<String[]> {
         return null;
 
     }
-    private String[] duplicate(String[] src){
+
+    private String[] duplicate(String[] src) {
         String[] dest = new String[src.length];
-        System.arraycopy( src, 0, dest, 0, src.length );
+        System.arraycopy(src, 0, dest, 0, src.length);
         return dest;
     }
 
     @Override
     public byte[] encode(String[] strings) {
         List<Byte> encodedMessage = new LinkedList<>();
-        for (String s: strings) {
+        for (String s : strings) {
             byte[] encodedString = this.stringEncoderDecoder.encode(s);
             MessageContainerEncoderDecoder.addBytesToList(encodedMessage, encodedString);
         }
@@ -60,11 +62,5 @@ public class StringListDecoder implements MessageEncoderDecoder<String[]> {
         return MessageContainerEncoderDecoder.getUnboxingArray(encodedMessage);
     }
 
-    public int getSize() {
-        return size;
-    }
 
-    public void setSize(int size) {
-        this.size = size;
-    }
 }

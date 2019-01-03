@@ -19,9 +19,9 @@ public class StatsDecoder implements MessageEncoderDecoder<MessageContainer> {
 
     @Override
     public MessageContainer decodeNextByte(byte nextByte) {
-        MessageContainer messageContainer = new MessageContainer();
         String username = stringEncoderDecoder.decodeNextByte(nextByte);
         if (username != null) {
+            MessageContainer messageContainer = new MessageContainer();
             messageContainer.setCommand(new StatsCommand(username));
             return messageContainer;
         }

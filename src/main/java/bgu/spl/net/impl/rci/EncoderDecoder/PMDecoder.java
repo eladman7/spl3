@@ -15,12 +15,14 @@ public class PMDecoder implements MessageEncoderDecoder<MessageContainer> {
 
     @Override
     public MessageContainer decodeNextByte(byte nextByte) {
-        MessageContainer messageContainer = new MessageContainer();
-        toUsername = stringEncoderDecoder.decodeNextByte(nextByte);
-        if (toUsername != null) {
+        if (toUsername == null) {
+            toUsername = stringEncoderDecoder.decodeNextByte(nextByte);
+        }else {
             String message = stringEncoderDecoder.decodeNextByte(nextByte);
             if (message != null) {
+                MessageContainer messageContainer = new MessageContainer();
                 messageContainer.setCommand(new PMCommand(toUsername, message));
+                toUsername = null;
                 return messageContainer;
             }
         }

@@ -14,19 +14,16 @@ public class RegisterDecoder implements MessageEncoderDecoder<MessageContainer> 
 
     @Override
     public MessageContainer decodeNextByte(byte nextByte) {
-        if (this.username == null) { // still reading username
-            String username = stringEncoderDecoder.decodeNextByte(nextByte);
-            if (username != null) {
-                this.username = username;
-            }
+        if (username == null) { // still reading username
+            username = stringEncoderDecoder.decodeNextByte(nextByte);
+
         } else { // reading password
             String password = stringEncoderDecoder.decodeNextByte(nextByte);
             if (password != null) { // finish
-                String user = this.username;
-                this.username = null;
-                RegisterCommand registerCommand = new RegisterCommand(user, password);
+                RegisterCommand registerCommand = new RegisterCommand(username, password);
                 MessageContainer messageContainer = new MessageContainer();
                 messageContainer.setCommand(registerCommand);
+                this.username = null;
                 return messageContainer;
             }
         }

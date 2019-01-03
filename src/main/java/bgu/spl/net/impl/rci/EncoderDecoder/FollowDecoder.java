@@ -9,8 +9,7 @@ import java.util.List;
 
 
 public class FollowDecoder implements MessageEncoderDecoder<MessageContainer> {
-    private boolean follow;
-    private boolean followFound = false;
+    private Boolean follow = null;
     private StringListDecoder stringListDecoder;
     private ShortDecoder shortDecoder;
 
@@ -22,13 +21,12 @@ public class FollowDecoder implements MessageEncoderDecoder<MessageContainer> {
     @Override
     public MessageContainer decodeNextByte(byte nextByte) {
         MessageContainer messageContainer = new MessageContainer();
-        if (!followFound){
-            this.follow = (nextByte == 0);
-            followFound = true;
+        if (follow == null){
+            this.follow = (nextByte == (byte) 0);
         }else {
             String[] users = stringListDecoder.decodeNextByte(nextByte);
             if (users != null){
-                followFound = false;
+                follow = null;
                 messageContainer.setCommand(new FollowCommand(users, follow));
                 return messageContainer;
             }
