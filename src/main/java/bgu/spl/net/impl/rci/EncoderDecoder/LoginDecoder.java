@@ -30,8 +30,7 @@ public class LoginDecoder implements MessageEncoderDecoder<MessageContainer> {
 
     @Override
     public byte[] encode(MessageContainer message) {
-        //todo:
-        return null;
+        return new byte[0];
     }
 }
 

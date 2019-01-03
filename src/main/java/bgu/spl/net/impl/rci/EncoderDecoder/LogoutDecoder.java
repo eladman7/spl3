@@ -2,9 +2,7 @@ package bgu.spl.net.impl.rci.EncoderDecoder;
 
 import bgu.spl.net.api.MessageContainer;
 import bgu.spl.net.api.MessageEncoderDecoder;
-import bgu.spl.net.impl.rci.Command;
 import bgu.spl.net.impl.rci.CommandModels.LogoutCommand;
-import bgu.spl.net.impl.rci.ExecutionInfo;
 
 public class LogoutDecoder implements MessageEncoderDecoder<MessageContainer> {
     @Override

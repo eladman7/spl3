@@ -2,9 +2,7 @@ package bgu.spl.net.impl.rci.EncoderDecoder;
 
 import bgu.spl.net.api.MessageContainer;
 import bgu.spl.net.api.MessageEncoderDecoder;
-import bgu.spl.net.impl.rci.Command;
 import bgu.spl.net.impl.rci.CommandModels.FollowCommand;
-import bgu.spl.net.impl.rci.ExecutionInfo;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,9 +12,11 @@ public class FollowDecoder implements MessageEncoderDecoder<MessageContainer> {
     private boolean follow;
     private boolean followFound = false;
     private StringListDecoder stringListDecoder;
+    private ShortDecoder shortDecoder;
 
     public FollowDecoder() {
-        this.stringListDecoder= new StringListDecoder();
+        this.stringListDecoder = new StringListDecoder();
+        this.shortDecoder = new ShortDecoder();
     }
 
     @Override
@@ -39,7 +39,14 @@ public class FollowDecoder implements MessageEncoderDecoder<MessageContainer> {
 
     @Override
     public byte[] encode(MessageContainer message) {
+        List<String> toFollowNames = (List<String>) message.getAdditionalData();
+        byte[] encodedNames = stringListDecoder.encode((String[]) toFollowNames.toArray());
+        byte[] encodedLength = shortDecoder.encode((short) encodedNames.length);
+
         List<Byte> encodedMessage = new LinkedList<>();
+        MessageContainerEncoderDecoder.addBytesToList(encodedMessage, encodedLength);
+        MessageContainerEncoderDecoder.addBytesToList(encodedMessage, encodedNames);
+
         return MessageContainerEncoderDecoder.getUnboxingArray(encodedMessage);
     }
 }

@@ -34,10 +34,31 @@ public class FollowCommand extends Responder implements Command<ExecutionInfo> {
     }
 
     private void executeUnFollow(ExecutionInfo execInfo) {
-        // todo this
+        // im logged in
+        DB db = execInfo.getDb();
+        User me = db.getUser(execInfo.getConnId());
+        String[] namesToUnFollow = usernamesToFollow;
+        List<User> newToUnFollow = new ArrayList<>();
+
+        for (String username: namesToUnFollow){
+            User userToUnFollow = db.getUser(username);
+            if (userToUnFollow != null && me.isFollowing(username)){
+                newToUnFollow.add(userToUnFollow);
+            }
+        }
+
+        if (newToUnFollow.size() > 0){
+            List<String> toUnFollowNames = usersToNames(newToUnFollow);
+            ack(execInfo, opcode, toUnFollowNames, this);
+        }else {
+            error(execInfo, opcode);
+        }
+
+
     }
 
     private void executeFollow(ExecutionInfo execInfo) {
+        // im logged in
         DB db = execInfo.getDb();
         User me = db.getUser(execInfo.getConnId());
         List<User> newToFollow = new ArrayList<>();
@@ -57,12 +78,12 @@ public class FollowCommand extends Responder implements Command<ExecutionInfo> {
         }
     }
 
-    private List<String> usersToNames(List<User> newToFollow) {
-        List<String> newToFollowNames = new ArrayList<>();
-        for (User user: newToFollow){
-            newToFollowNames.add(user.getUsername());
+    private List<String> usersToNames(List<User> users) {
+        List<String> names = new ArrayList<>();
+        for (User user: users){
+            names.add(user.getUsername());
         }
-        return newToFollowNames;
+        return names;
     }
 
 }

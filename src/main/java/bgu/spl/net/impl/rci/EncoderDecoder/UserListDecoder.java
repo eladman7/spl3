@@ -2,9 +2,7 @@ package bgu.spl.net.impl.rci.EncoderDecoder;
 
 import bgu.spl.net.api.MessageContainer;
 import bgu.spl.net.api.MessageEncoderDecoder;
-import bgu.spl.net.impl.rci.Command;
 import bgu.spl.net.impl.rci.CommandModels.UserListCommand;
-import bgu.spl.net.impl.rci.ExecutionInfo;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;

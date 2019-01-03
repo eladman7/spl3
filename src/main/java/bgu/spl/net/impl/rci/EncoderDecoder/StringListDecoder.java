@@ -2,6 +2,9 @@ package bgu.spl.net.impl.rci.EncoderDecoder;
 
 import bgu.spl.net.api.MessageEncoderDecoder;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class StringListDecoder implements MessageEncoderDecoder<String[]> {
     private String[] strings = null;
     private int size = -1;
@@ -47,8 +50,14 @@ public class StringListDecoder implements MessageEncoderDecoder<String[]> {
     }
 
     @Override
-    public byte[] encode(String[] message) {
-        return null;
+    public byte[] encode(String[] strings) {
+        List<Byte> encodedMessage = new LinkedList<>();
+        for (String s: strings) {
+            byte[] encodedString = this.stringEncoderDecoder.encode(s);
+            MessageContainerEncoderDecoder.addBytesToList(encodedMessage, encodedString);
+        }
+
+        return MessageContainerEncoderDecoder.getUnboxingArray(encodedMessage);
     }
 
     public int getSize() {
