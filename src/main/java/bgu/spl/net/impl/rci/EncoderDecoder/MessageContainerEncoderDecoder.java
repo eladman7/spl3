@@ -36,17 +36,26 @@ public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<Mes
             Short code = shortDecoder.decodeNextByte(nextByte);
             if (code != null) {
                 this.opcode = code;
+
+                if (opcode == 3 || opcode == 7) { // nothing else to read
+                    MessageEncoderDecoder<MessageContainer> decoder = codeToDecoder.get((short) opcode);
+                    return finish(decoder.decodeNextByte((byte) 0));
+                }
             }
         } else { // we are in the data part
 
             MessageContainer messageContainer = decodeCommand(nextByte);
             if (messageContainer != null) {
-                opcode = -1;
-                System.out.println("got new message with cmd" + messageContainer.getCommand().toString());
-                return messageContainer;
+                return finish(messageContainer);
             }
         }
         return null;
+    }
+
+    private MessageContainer finish(MessageContainer messageContainer) {
+        opcode = -1;
+        System.out.println("got new message with cmd " + messageContainer.getCommand().getClass().getSimpleName());
+        return messageContainer;
     }
 
     private MessageContainer decodeCommand(byte nextByte) {
@@ -65,7 +74,7 @@ public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<Mes
      * add additional data
      *
      * @param message the message to encode
-     * @return
+     * @return encoded message in bytes
      */
     @Override
     public byte[] encode(MessageContainer message) {
@@ -89,10 +98,12 @@ public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<Mes
 
         } else if (message.getType() == MessageContainer.Type.ACK) {
 
+            System.out.println("sending ack: " + message.getOriginOpcode());
             encodedBytes.addAll(Arrays.asList(getBoxingArray(shortDecoder.encode((short) 10))));
 
         } else if (message.getType() == MessageContainer.Type.ERROR) {
 
+            System.out.println("sending error: " + message.getOriginOpcode());
             encodedBytes.addAll(Arrays.asList(getBoxingArray(shortDecoder.encode((short) 11))));
         }
 

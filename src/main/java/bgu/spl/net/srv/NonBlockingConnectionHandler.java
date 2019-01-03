@@ -48,9 +48,11 @@ public class NonBlockingConnectionHandler<T> implements ConnectionHandler<T> {
             buf.flip();
             return () -> {
                 try {
+                    System.out.println("got something...");
                     while (buf.hasRemaining()) {
                         T nextMessage = encdec.decodeNextByte(buf.get());
                         if (nextMessage != null) {
+                            System.out.println("processing it...");
                             protocol.process(nextMessage);
                         }
                     }
@@ -81,6 +83,7 @@ public class NonBlockingConnectionHandler<T> implements ConnectionHandler<T> {
     public void continueWrite() {
         while (!writeQueue.isEmpty()) {
             try {
+                System.out.println("writing to client");
                 ByteBuffer top = writeQueue.peek();
                 chan.write(top);
                 if (top.hasRemaining()) {
