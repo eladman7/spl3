@@ -22,7 +22,7 @@ public class FollowCommand extends Responder implements Command<ExecutionInfo> {
     public void execute(ExecutionInfo execInfo) {
         DB db = execInfo.getDb();
         User me = db.getUser(execInfo.getConnId());
-        if (me.isLoggedIn()){
+        if (me != null && me.isLoggedIn()){
             if (follow) {
                 executeFollow(execInfo);
             }else {
@@ -49,7 +49,7 @@ public class FollowCommand extends Responder implements Command<ExecutionInfo> {
 
         if (newToUnFollow.size() > 0){
             List<String> toUnFollowNames = usersToNames(newToUnFollow);
-            ack(execInfo, opcode, toUnFollowNames, this);
+            ack(execInfo, opcode, toUnFollowNames.toArray(), this);
         }else {
             error(execInfo, opcode);
         }
@@ -72,7 +72,7 @@ public class FollowCommand extends Responder implements Command<ExecutionInfo> {
 
         if (newToFollow.size() > 0){
             List<String> toFollowNames = usersToNames(newToFollow);
-            ack(execInfo, opcode, toFollowNames, this);
+            ack(execInfo, opcode, toFollowNames.toArray(), this);
         }else {
             error(execInfo, opcode);
         }

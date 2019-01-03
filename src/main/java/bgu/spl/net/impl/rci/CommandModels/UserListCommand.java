@@ -15,7 +15,7 @@ public class UserListCommand extends Responder implements Command<ExecutionInfo>
     public void execute(ExecutionInfo execInfo) {
         DB db = execInfo.getDb();
         User me = db.getUser(execInfo.getConnId());
-        if (me.isLoggedIn()) {
+        if (me != null && me.isLoggedIn()) {
             List<String> userNames = db.getUsers().stream()
                     .map(User::getUsername)
                     .collect(Collectors.toList());

@@ -26,18 +26,19 @@ public class StringListDecoder implements MessageEncoderDecoder<String[]> {
                 strings = new String[listSize];
             }
         } else { // list part
+
+            String next = stringEncoderDecoder.decodeNextByte(nextByte);
+            if (next != null) {
+                strings[nextStringIndex] = next;
+                nextStringIndex++;
+            }
+
             if (nextStringIndex == size) { // finished
                 String[] result = duplicate(strings);
                 strings = null;
                 size = null;
                 nextStringIndex = 0;
                 return result;
-            }
-
-            String next = stringEncoderDecoder.decodeNextByte(nextByte);
-            if (next != null) {
-                strings[nextStringIndex] = next;
-                nextStringIndex++;
             }
 
         }

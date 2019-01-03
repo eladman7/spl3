@@ -25,7 +25,7 @@ public class StatsCommand extends Responder implements Command<ExecutionInfo> {
         User me = db.getUser(execInfo.getConnId());
         User dataUser = db.getUser(username);
 
-        if (me.isLoggedIn() && dataUser != null) {
+        if (me != null && me.isLoggedIn() && dataUser != null) {
             List<Post> userPosts = db.getPosts().stream().
                     filter(x-> x.getFrom().equals(dataUser)).
                     collect(Collectors.toList());

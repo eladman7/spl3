@@ -17,7 +17,7 @@ public class LogoutCommand extends Responder implements Command<ExecutionInfo>{
         Connections<MessageContainer> connections = execInfo.getConnections();
 
         User user = db.getUser(execInfo.getConnId());
-        if (user.isLoggedIn()){
+        if (user != null && user.isLoggedIn()){
             user.setLoggedIn(false);
             user.setConnectionId(-1);
             connections.disconnect(execInfo.getConnId());

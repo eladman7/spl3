@@ -23,7 +23,7 @@ public class PostCommand extends Responder implements Command<ExecutionInfo> {
     public void execute(ExecutionInfo execInfo) {
         DB db = execInfo.getDb();
         User me = db.getUser(execInfo.getConnId());
-        if (me.isLoggedIn()){
+        if (me != null && me.isLoggedIn()){
             db.addPost(postMessage, me);
             Set<Integer> toNotifyConnIds = new HashSet<>();
 
