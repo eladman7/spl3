@@ -34,7 +34,7 @@ public class PostCommand extends Responder implements Command<ExecutionInfo> {
             for(int connId: toNotifyConnIds){
                 notifyPublic(execInfo, me.getUsername(), connId, postMessage, this);
             }
-            // todo ack here?
+            ack(execInfo, opcode, null, this);
         }else {
             error(execInfo, opcode);
         }
