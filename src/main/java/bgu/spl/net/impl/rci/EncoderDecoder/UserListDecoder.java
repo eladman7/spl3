@@ -30,15 +30,9 @@ public class UserListDecoder implements MessageEncoderDecoder<MessageContainer> 
     public byte[] encode(MessageContainer message) {
         List<Byte> encodedBytes = new LinkedList<>();
         Object[] _userNames = (Object[]) message.getAdditionalData();
-//        List<String> userNames = new ArrayList<>();
-//        for (Object o: _userNames){
-//            userNames.add((String) o);
-//        }
-//        String[] userNames1 = (String[]) userNames.toArray();
 
 
         String[] userNames = Arrays.asList(_userNames).toArray(new String[_userNames.length]);
-        // add num of users and users
         byte[] encodedSize = shortEncoder.encode((short) userNames.length);
         byte[] encodedNames = stringListEncoder.encode(userNames);
 

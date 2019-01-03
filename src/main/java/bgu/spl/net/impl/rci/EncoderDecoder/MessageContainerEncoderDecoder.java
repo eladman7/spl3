@@ -96,37 +96,29 @@ public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<Mes
         System.out.println("sending error: " + message.getOriginOpcode());
         byte[] encodedOpcode = shortDecoder.encode((short) 11);
         addBytesToList(encodedBytes, encodedOpcode);
-//        encodedBytes.addAll(Arrays.asList(getBoxingArray(shortDecoder.encode((short) 11))));
         byte[] encodedOrigin = shortDecoder.encode(message.getOriginOpcode());
         addBytesToList(encodedBytes, encodedOrigin);
-
-//        encodedBytes.addAll(Arrays.asList(getBoxingArray(shortDecoder.encode(message.getOriginOpcode()))));
     }
 
     private void writeAck(MessageContainer message, List<Byte> encodedBytes, ShortDecoder shortDecoder) {
         System.out.println("sending ack: " + message.getOriginOpcode());
         byte[] ackCodeBytes = shortDecoder.encode((short) 10);
-//        encodedBytes.addAll(Arrays.asList(getBoxingArray()));
         addBytesToList(encodedBytes, ackCodeBytes);
         byte[] originBytes = shortDecoder.encode(message.getOriginOpcode());
         addBytesToList(encodedBytes, originBytes);
-//        encodedBytes.addAll(Arrays.asList(getBoxingArray(shortDecoder.encode(message.getOriginOpcode()))));
         if (message.getAdditionalData() != null){
             MessageEncoderDecoder<MessageContainer> encoder = codeToDecoder.get(message.getOriginOpcode());
             byte[] encodedAdditionalData = encoder.encode(message);
             if (encodedAdditionalData.length > 0){
                 addBytesToList(encodedBytes, encodedAdditionalData);
             }
-//            encodedBytes.addAll(Arrays.asList(getBoxingArray()));
         }
     }
 
     private void writeNotification(MessageContainer message, List<Byte> encodedBytes, ShortDecoder shortDecoder) {
         System.out.println("sending notification: " + message.getContent() + "to user: " + message.getFromUsername());
         byte[] encodedOpcode = shortDecoder.encode((short) 9);
-//        encodedBytes.addAll(Arrays.asList(getBoxingArray()));
         addBytesToList(encodedBytes, encodedOpcode);
-//        encodedBytes.addAll(Arrays.asList(getBoxingArray(shortDecoder.encode((short) 9))));
         if (message.isPm()) {
             encodedBytes.add((byte) 0);
         } else {
@@ -137,8 +129,6 @@ public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<Mes
         addBytesToList(encodedBytes, userBytes);
         byte[] contentBytes = stringEncoder.encode(message.getContent());
         addBytesToList(encodedBytes, contentBytes);
-//        encodedBytes.addAll(Arrays.asList(getBoxingArray())));
-//        encodedBytes.addAll(Arrays.asList(getBoxingArray(contentBytes)));
     }
 
     public static byte[] getUnboxingArray(List<Byte> bytes) {
