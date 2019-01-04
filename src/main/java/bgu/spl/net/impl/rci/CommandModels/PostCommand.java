@@ -33,11 +33,14 @@ public class PostCommand extends Responder implements Command<ExecutionInfo> {
 
             for(String username: toNotifyUserNames){
                 User user = db.getUser(username);
-                if (user.isLoggedIn()){
-                    notifyPublic(execInfo, me.getUsername(), user.getConnectionId(), postMessage, this);
-                }else {
-                    user.addPendingPost(newPost);
+                synchronized (db.getPostsLock()){
+                    if (user.isLoggedIn()){
+                        notifyPublic(execInfo, me.getUsername(), user.getConnectionId(), postMessage, this);
+                    }else {
+                        user.addPendingPost(newPost);
+                    }
                 }
+
             }
             ack(execInfo, opcode, null, this);
         }else {

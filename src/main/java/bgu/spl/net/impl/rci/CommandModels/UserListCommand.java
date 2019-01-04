@@ -5,8 +5,6 @@ import bgu.spl.net.impl.rci.DBModels.DB;
 import bgu.spl.net.impl.rci.DBModels.User;
 import bgu.spl.net.impl.rci.ExecutionInfo;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class UserListCommand extends Responder implements Command<ExecutionInfo> {
     private static final short opcode = 7;
@@ -16,10 +14,10 @@ public class UserListCommand extends Responder implements Command<ExecutionInfo>
         DB db = execInfo.getDb();
         User me = db.getUser(execInfo.getConnId());
         if (me != null && me.isLoggedIn()) {
-            List<String> userNames = db.getUsers().stream()
-                    .map(User::getUsername)
-                    .collect(Collectors.toList());
-            ack(execInfo, opcode, userNames.toArray(), this);
+            synchronized (db.getUsersLock()){ // in case a new user joined in the middle
+                ack(execInfo, opcode, db.getUsers().stream().map(User::getUsername).toArray(), this);
+            }
+
         } else {
             error(execInfo, opcode);
         }

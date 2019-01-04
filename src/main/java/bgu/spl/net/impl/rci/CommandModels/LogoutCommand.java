@@ -20,8 +20,11 @@ public class LogoutCommand extends Responder implements Command<ExecutionInfo>{
         if (user != null && user.isLoggedIn()){
             user.setLoggedIn(false);
             user.setConnectionId(-1);
-            ack(execInfo, opcode, null, this);
-            connections.disconnect(execInfo.getConnId());
+            synchronized (db.getPostsLock()) { // in case we are writing a message/post to him at the moment
+                ack(execInfo, opcode, null, this);
+                connections.disconnect(execInfo.getConnId());
+            }
+
         }else {
             error(execInfo, opcode);
         }
