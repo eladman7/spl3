@@ -102,7 +102,7 @@ public class Reactor<T> implements Server{
     private void handleAccept(ServerSocketChannel serverChan, Selector selector) throws IOException {
         SocketChannel clientChan = serverChan.accept();
         clientChan.configureBlocking(false);
-        int connectionId = indexDispatcher.getAndDecrement();
+        int connectionId = indexDispatcher.getAndIncrement();
         BidiMessagingProtocol<T> protocol = protocolFactory.get();
         protocol.start(connectionId, connections);
         MessageEncoderDecoder<T> codec = encoderDecoderFactory.get();

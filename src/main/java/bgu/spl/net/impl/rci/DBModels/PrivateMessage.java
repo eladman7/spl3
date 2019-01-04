@@ -4,11 +4,21 @@ public class PrivateMessage {
     private String text;
     private User from;
     private User to;
+    private boolean isPending;
 
-    public PrivateMessage(String text, User from, User to) {
+    public boolean isPending() {
+        return isPending;
+    }
+
+    public void setPending(boolean pending) {
+        isPending = pending;
+    }
+
+    public PrivateMessage(String text, User from, User to, boolean isPending) {
         this.text = text;
         this.from = from;
         this.to = to;
+        this.isPending = isPending;
     }
 
     public String getText() {

@@ -59,8 +59,10 @@ public class DB {
         this.users = users;
     }
 
-    public void addPost(String content, User from){
-        posts.add(new Post(content, from));
+    public Post addPost(String content, User from){
+        Post post = new Post(content, from);
+        posts.add(post);
+        return post;
     }
 
     public Queue<Post> getPosts() {
@@ -72,7 +74,11 @@ public class DB {
     }
 
     public void addPrivateMessage(String content, User from, User to){
-        privateMessages.add(new PrivateMessage(content, from, to));
+        privateMessages.add(new PrivateMessage(content, from, to, false));
+    }
+
+    public void addPendingMessage(String content, User from, User to){
+        privateMessages.add(new PrivateMessage(content, from, to, true));
     }
 
     public Queue<PrivateMessage> getPrivateMessages() {

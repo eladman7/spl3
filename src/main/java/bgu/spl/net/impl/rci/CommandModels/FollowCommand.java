@@ -48,6 +48,10 @@ public class FollowCommand extends Responder implements Command<ExecutionInfo> {
         }
 
         if (newToUnFollow.size() > 0){
+            for (User user: newToUnFollow){
+                user.removeFollower(me);
+                me.removeFollowing(user);
+            }
             List<String> toUnFollowNames = usersToNames(newToUnFollow);
             ack(execInfo, opcode, toUnFollowNames.toArray(), this);
         }else {
@@ -71,6 +75,10 @@ public class FollowCommand extends Responder implements Command<ExecutionInfo> {
         }
 
         if (newToFollow.size() > 0){
+            for (User user: newToFollow){
+                user.addFollower(me);
+                me.addFollowing(user);
+            }
             List<String> toFollowNames = usersToNames(newToFollow);
             ack(execInfo, opcode, toFollowNames.toArray(), this);
         }else {

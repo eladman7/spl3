@@ -22,8 +22,13 @@ public class PMCommand extends Responder implements Command<ExecutionInfo> {
         User to = db.getUser(toUsername);
         User me = db.getUser(execInfo.getConnId());
         if (me != null && me.isLoggedIn() && to != null){
-            notifyPrivate(execInfo, me.getUsername(), to.getConnectionId(), message, this);
-            db.addPrivateMessage(message, me, to);
+            if (to.isLoggedIn()){
+                notifyPrivate(execInfo, me.getUsername(), to.getConnectionId(), message, this);
+                db.addPrivateMessage(message, me, to);
+            }
+            else{
+                db.addPendingMessage(message, me, to); // will be handled later
+            }
             ack(execInfo, opcode, null, this);
         }else {
 //            System.out.println("error: me.isLoggedIn()="+me.isLoggedIn()+" (to != null)="+(to != null));

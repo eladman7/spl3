@@ -10,6 +10,7 @@ public class User {
     private final AtomicBoolean loggedIn;
     private Queue<User> following;
     private Queue<User> followers;
+    private Queue<Post> pendingPosts;
     private Queue<Post> posted;
     private Queue<PrivateMessage> sent;
     private Queue<PrivateMessage> received;
@@ -32,6 +33,22 @@ public class User {
         this.connectionId = connectionId;
     }
 
+    public Queue<Post> getPendingPosts() {
+        return pendingPosts;
+    }
+
+    public void addPendingPost(Post post) {
+        this.pendingPosts.add(post);
+    }
+
+    public void clearPendingPost() {
+        this.pendingPosts.clear();
+    }
+
+    public void removePendingPost(Post post) {
+        this.pendingPosts.remove(post);
+    }
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;
@@ -41,6 +58,7 @@ public class User {
         posted = new ConcurrentLinkedQueue<>();
         sent = new ConcurrentLinkedQueue<>();
         received = new ConcurrentLinkedQueue<>();
+        pendingPosts = new ConcurrentLinkedQueue<>();
     }
 
     public Queue<User> getMyFollowers() {
@@ -49,6 +67,22 @@ public class User {
 
     public void setMyFollowers(Queue<User> followers) {
         this.followers = followers;
+    }
+
+    public void addFollower(User follower) {
+        this.followers.add(follower);
+    }
+
+    public void addFollowing(User toFollow) {
+        this.following.add(toFollow);
+    }
+
+    public void removeFollower(User follower) {
+        this.followers.remove(follower);
+    }
+
+    public void removeFollowing(User toUnFollow) {
+        this.following.remove(toUnFollow);
     }
 
     public boolean isLoggedIn() {
@@ -63,29 +97,29 @@ public class User {
         return following;
     }
 
-    public void setImFollowing(Queue<User> following) {
-        this.following = following;
-    }
+//    public void setImFollowing(Queue<User> following) {
+//        this.following = following;
+//    }
 
-    public Queue<Post> getPosted() {
-        return posted;
-    }
+//    public Queue<Post> getPosted() {
+//        return posted;
+//    }
 
-    public void setPosted(Queue<Post> posted) {
-        this.posted = posted;
-    }
+//    public void setPosted(Queue<Post> posted) {
+//        this.posted = posted;
+//    }
 
-    public Queue<PrivateMessage> getSent() {
-        return sent;
-    }
+//    public Queue<PrivateMessage> getSent() {
+//        return sent;
+//    }
 
-    public void setSent(Queue<PrivateMessage> sent) {
-        this.sent = sent;
-    }
+//    public void setSent(Queue<PrivateMessage> sent) {
+//        this.sent = sent;
+//    }
 
-    public Queue<PrivateMessage> getReceived() {
-        return received;
-    }
+//    public Queue<PrivateMessage> getReceived() {
+//        return received;
+//    }
 
     public void setReceived(Queue<PrivateMessage> received) {
         this.received = received;

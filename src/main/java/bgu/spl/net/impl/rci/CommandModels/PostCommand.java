@@ -3,6 +3,7 @@ package bgu.spl.net.impl.rci.CommandModels;
 
 import bgu.spl.net.impl.rci.Command;
 import bgu.spl.net.impl.rci.DBModels.DB;
+import bgu.spl.net.impl.rci.DBModels.Post;
 import bgu.spl.net.impl.rci.DBModels.User;
 import bgu.spl.net.impl.rci.ExecutionInfo;
 
@@ -24,15 +25,19 @@ public class PostCommand extends Responder implements Command<ExecutionInfo> {
         DB db = execInfo.getDb();
         User me = db.getUser(execInfo.getConnId());
         if (me != null && me.isLoggedIn()){
-            db.addPost(postMessage, me);
-            Set<Integer> toNotifyConnIds = new HashSet<>();
+            Post newPost = db.addPost(postMessage, me);
+            Set<String> toNotifyUserNames = new HashSet<>();
 
-            Queue<User> followers = me.getMyFollowers();
-            updateFollowers(toNotifyConnIds, followers);
-            updateTagged(db, toNotifyConnIds);
+            updateFollowers(toNotifyUserNames, me.getMyFollowers());
+            updateTagged(db, toNotifyUserNames);
 
-            for(int connId: toNotifyConnIds){
-                notifyPublic(execInfo, me.getUsername(), connId, postMessage, this);
+            for(String username: toNotifyUserNames){
+                User user = db.getUser(username);
+                if (user.isLoggedIn()){
+                    notifyPublic(execInfo, me.getUsername(), user.getConnectionId(), postMessage, this);
+                }else {
+                    user.addPendingPost(newPost);
+                }
             }
             ack(execInfo, opcode, null, this);
         }else {
@@ -42,17 +47,17 @@ public class PostCommand extends Responder implements Command<ExecutionInfo> {
 
     }
 
-    private void updateTagged(DB db, Set<Integer> toNotifyConnIds) {
+    private void updateTagged(DB db, Set<String> toNotifyUserNames) {
         for (User user: db.getUsers()){
             if (postMessage.contains("@" + user.getUsername())){
-                toNotifyConnIds.add(user.getConnectionId());
+                toNotifyUserNames.add(user.getUsername());
             }
         }
     }
 
-    private void updateFollowers(Set<Integer> toNotifyConnIds, Queue<User> followers) {
+    private void updateFollowers(Set<String> toNotifyUserNames, Queue<User> followers) {
         for (User user: followers){
-            toNotifyConnIds.add(user.getConnectionId());
+            toNotifyUserNames.add(user.getUsername());
         }
     }
 }

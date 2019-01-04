@@ -2,8 +2,13 @@ package bgu.spl.net.impl.rci.CommandModels;
 
 import bgu.spl.net.impl.rci.Command;
 import bgu.spl.net.impl.rci.DBModels.DB;
+import bgu.spl.net.impl.rci.DBModels.Post;
+import bgu.spl.net.impl.rci.DBModels.PrivateMessage;
 import bgu.spl.net.impl.rci.DBModels.User;
 import bgu.spl.net.impl.rci.ExecutionInfo;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class LoginCommand extends Responder implements Command<ExecutionInfo> {
@@ -19,13 +24,38 @@ public class LoginCommand extends Responder implements Command<ExecutionInfo> {
     @Override
     public void execute(ExecutionInfo execInfo) {
         DB db = execInfo.getDb();
-        User user = db.getUser(username);
-        if (user != null && password.equals(user.getPassword()) && !user.isLoggedIn()){
-            user.setLoggedIn(true);
-            user.setConnectionId(execInfo.getConnId());
-            ack(execInfo, opcode, null, this);
-        }else {
-            error(execInfo, opcode);
+        synchronized (db.getUsersLock()){
+            User user = db.getUser(username);
+            if (user != null && password.equals(user.getPassword()) && !user.isLoggedIn()){
+                user.setLoggedIn(true);
+                user.setConnectionId(execInfo.getConnId());
+                ack(execInfo, opcode, null, this);
+                sendPendingMessages(execInfo, user);
+            }else {
+                error(execInfo, opcode);
+            }
         }
+
+    }
+
+    private void sendPendingMessages(ExecutionInfo execInfo, User me) {
+        DB db = execInfo.getDb();
+        List<PrivateMessage> pendingMessages = db.getPrivateMessages().stream().
+                filter(x -> x.isPending() && x.getTo().equals(me))
+                .collect(Collectors.toList());
+        for (PrivateMessage message: pendingMessages){
+            notifyPrivate(
+                    execInfo, message.getFrom().getUsername(),
+                    execInfo.getConnId(), message.getText(), this);
+            message.setPending(false);
+        }
+        for(Post post:me.getPendingPosts()){
+            notifyPublic(
+                    execInfo, post.getFrom().getUsername(),
+                    execInfo.getConnId(), post.getText(), this);
+        }
+        me.clearPendingPost();
+
+
     }
 }

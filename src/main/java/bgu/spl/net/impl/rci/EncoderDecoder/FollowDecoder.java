@@ -41,7 +41,7 @@ public class FollowDecoder implements MessageEncoderDecoder<MessageContainer> {
         Object[] _toFollowNames = (Object[]) message.getAdditionalData();
         String[] toFollowNames = Arrays.asList(_toFollowNames).toArray(new String[_toFollowNames.length]);
         byte[] encodedNames = stringListDecoder.encode(toFollowNames);
-        byte[] encodedLength = shortDecoder.encode((short) encodedNames.length);
+        byte[] encodedLength = shortDecoder.encode((short) toFollowNames.length);
 
         List<Byte> encodedMessage = new LinkedList<>();
         MessageContainerEncoderDecoder.addBytesToList(encodedMessage, encodedLength);
