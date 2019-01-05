@@ -40,6 +40,7 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
                     protocol.process(nextMessage);
                 }
             }
+            close(); // todo ok here?
 
         } catch (IOException ex) {
             ex.printStackTrace();

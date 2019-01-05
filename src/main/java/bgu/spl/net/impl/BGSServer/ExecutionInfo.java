@@ -8,36 +8,31 @@ public class ExecutionInfo {
     private Connections<MessageContainer> connections;
     private int connId;
     private DB db;
-    private MessageContainer resultMessage;
+    private boolean logoutSuccessful;
 
-    public MessageContainer getResultMessage() {
-        return resultMessage;
+    public boolean isLogout() {
+        return logoutSuccessful;
     }
 
-    public void setResultMessage(MessageContainer resultMessage) {
-        this.resultMessage = resultMessage;
+    public void setLogout(boolean newState) {
+        this.logoutSuccessful = newState;
     }
+
 
     public ExecutionInfo(Connections<MessageContainer> connections, int connId, DB db) {
         this.connections = connections;
         this.connId = connId;
         this.db = db;
+        this.logoutSuccessful = false;
     }
 
     public Connections<MessageContainer> getConnections() {
         return connections;
     }
 
-    public void setConnections(Connections<MessageContainer> connections) {
-        this.connections = connections;
-    }
 
     public int getConnId() {
         return connId;
-    }
-
-    public void setConnId(int connId) {
-        this.connId = connId;
     }
 
     public DB getDb() {
