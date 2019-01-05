@@ -2,6 +2,7 @@ package bgu.spl.net.impl.BGSServer.CommandModels;
 
 import bgu.spl.net.impl.BGSServer.Command;
 import bgu.spl.net.impl.BGSServer.DBModels.DB;
+import bgu.spl.net.impl.BGSServer.DBModels.User;
 import bgu.spl.net.impl.BGSServer.ExecutionInfo;
 
 
@@ -19,15 +20,20 @@ public class RegisterCommand extends Responder implements Command<ExecutionInfo>
     public void execute(ExecutionInfo execInfo) {
         System.out.println("inside RegisterCommand.execute()");
         DB db = execInfo.getDb();
-        synchronized (db.getUsersLock()) {
-            if (db.getUser(username) == null) {
-                db.addUser(username, password);
-                ack(execInfo, opcode, null, this);
-            } else {
-                error(execInfo, opcode);
+
+        User me = db.getUser(execInfo.getConnId());
+        if (me != null && me.isLoggedIn()){
+            error(execInfo, opcode);
+        } else {
+            synchronized (db.getUsersLock()) { // in case 2 clients sends the same thing together
+                if (db.getUser(username) == null) {
+                    db.addUser(username, password);
+                    ack(execInfo, opcode, null, this);
+                } else {
+                    error(execInfo, opcode);
+                }
             }
         }
-
     }
 
     public String getUsername() {

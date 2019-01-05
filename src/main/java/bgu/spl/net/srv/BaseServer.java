@@ -49,13 +49,15 @@ public abstract class BaseServer<T> implements Server {
 
                 Socket clientSock = serverSock.accept();
 
-                int connectionId = indexDispatcher.getAndDecrement();
                 BidiMessagingProtocol<T> protocol = protocolFactory.get();
+                int connectionId = indexDispatcher.getAndIncrement();
                 protocol.start(connectionId, connections);
+
+                MessageEncoderDecoder<T> encoderDecoder = encdecFactory.get();
+
                 BlockingConnectionHandler<T> handler = new BlockingConnectionHandler<>(
-                        clientSock,
-                        encdecFactory.get(),
-                        protocolFactory.get());
+                        clientSock, encoderDecoder, protocol);
+
                 clientsMap.put(connectionId, handler);
                 execute(handler);
             }

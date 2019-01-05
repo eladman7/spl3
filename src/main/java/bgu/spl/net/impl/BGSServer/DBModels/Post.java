@@ -13,15 +13,8 @@ public class Post {
         this.from = from;
     }
 
-    public void setText(String text) {
-        this.text = text;
-    }
-
     public User getFrom() {
         return from;
     }
 
-    public void setFrom(User from) {
-        this.from = from;
-    }
 }

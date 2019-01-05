@@ -23,7 +23,7 @@ public class PMCommand extends Responder implements Command<ExecutionInfo> {
         User me = db.getUser(execInfo.getConnId());
         if (me != null && me.isLoggedIn() && to != null){
 
-            synchronized (db.getPostsLock()){ // in case the user leaves in the middle of this
+            synchronized (to.getUserLock()){ // in case the user leaves in the middle he will get the message
                 if (to.isLoggedIn()){
                     notifyPrivate(execInfo, me.getUsername(), to.getConnectionId(), message, this);
                     db.addPrivateMessage(message, me, to);
@@ -35,7 +35,6 @@ public class PMCommand extends Responder implements Command<ExecutionInfo> {
 
             ack(execInfo, opcode, null, this);
         }else {
-//            System.out.println("error: me.isLoggedIn()="+me.isLoggedIn()+" (to != null)="+(to != null));
             error(execInfo, opcode);
         }
     }

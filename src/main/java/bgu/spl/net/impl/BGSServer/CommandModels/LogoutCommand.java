@@ -18,9 +18,10 @@ public class LogoutCommand extends Responder implements Command<ExecutionInfo>{
 
         User user = db.getUser(execInfo.getConnId());
         if (user != null && user.isLoggedIn()){
-            user.setLoggedIn(false);
-            user.setConnectionId(-1);
-            synchronized (db.getPostsLock()) { // in case we are writing a message/post to him at the moment
+            synchronized (user.getUserLock()) { // in case the user has just received a message/post,
+                                                // he will get it and then logout
+                user.setLoggedIn(false);
+                user.setConnectionId(-1);
                 ack(execInfo, opcode, null, this);
                 connections.disconnect(execInfo.getConnId());
             }

@@ -33,7 +33,7 @@ public class PostCommand extends Responder implements Command<ExecutionInfo> {
 
             for(String username: toNotifyUserNames){
                 User user = db.getUser(username);
-                synchronized (db.getPostsLock()){
+                synchronized (user.getUserLock()){ // let a tagged user get a message before he is logged out
                     if (user.isLoggedIn()){
                         notifyPublic(execInfo, me.getUsername(), user.getConnectionId(), postMessage, this);
                     }else {

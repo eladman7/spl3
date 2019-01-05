@@ -9,28 +9,16 @@ public class DB {
     private Queue<PrivateMessage> privateMessages;
 
     private final Object usersLock;
-    private final Object postsLock;
-    private final Object privateMessagesLock;
 
     public DB() {
         users = new ConcurrentLinkedQueue<>();
         posts = new ConcurrentLinkedQueue<>();
         privateMessages = new ConcurrentLinkedQueue<>();
         usersLock = new Object();
-        postsLock = new Object();
-        privateMessagesLock = new Object();
     }
 
     public Object getUsersLock() {
         return usersLock;
-    }
-
-    public Object getPostsLock() {
-        return postsLock;
-    }
-
-    public Object getPrivateMessagesLock() {
-        return privateMessagesLock;
     }
 
     public Queue<User> getUsers() {
@@ -55,10 +43,6 @@ public class DB {
         return null;
     }
 
-    public void setUsers(Queue<User> users) {
-        this.users = users;
-    }
-
     public Post addPost(String content, User from){
         Post post = new Post(content, from);
         posts.add(post);
@@ -67,10 +51,6 @@ public class DB {
 
     public Queue<Post> getPosts() {
         return posts;
-    }
-
-    public void setPosts(Queue<Post> posts) {
-        this.posts = posts;
     }
 
     public void addPrivateMessage(String content, User from, User to){
@@ -83,10 +63,6 @@ public class DB {
 
     public Queue<PrivateMessage> getPrivateMessages() {
         return privateMessages;
-    }
-
-    public void setPrivateMessages(Queue<PrivateMessage> privateMessages) {
-        this.privateMessages = privateMessages;
     }
 
     public void addUser(String username, String password) {

@@ -24,16 +24,22 @@ public class LoginCommand extends Responder implements Command<ExecutionInfo> {
     @Override
     public void execute(ExecutionInfo execInfo) {
         DB db = execInfo.getDb();
-        synchronized (db.getUsersLock()){
-            User user = db.getUser(username);
-            if (user != null && password.equals(user.getPassword()) && !user.isLoggedIn()){
-                user.setLoggedIn(true);
-                user.setConnectionId(execInfo.getConnId());
-                ack(execInfo, opcode, null, this);
-                sendPendingMessages(execInfo, user);
-            }else {
-                error(execInfo, opcode);
+        User me = db.getUser(execInfo.getConnId());
+        if (me != null && me.isLoggedIn()){
+            error(execInfo, opcode);
+        } else {
+            synchronized (db.getUsersLock()){ // in case 2 clients send the same thing together
+                User user = db.getUser(username);
+                if (user != null && password.equals(user.getPassword()) && !user.isLoggedIn()){
+                    user.setLoggedIn(true);
+                    user.setConnectionId(execInfo.getConnId());
+                    ack(execInfo, opcode, null, this);
+                    sendPendingMessages(execInfo, user);
+                }else {
+                    error(execInfo, opcode);
+                }
             }
+
         }
 
     }

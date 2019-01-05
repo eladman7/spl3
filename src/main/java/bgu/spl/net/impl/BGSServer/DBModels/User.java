@@ -11,9 +11,7 @@ public class User {
     private Queue<User> following;
     private Queue<User> followers;
     private Queue<Post> pendingPosts;
-    private Queue<Post> posted;
-    private Queue<PrivateMessage> sent;
-    private Queue<PrivateMessage> received;
+    private final Object userLock;
     private int connectionId;
 
     public boolean isFollowing(String username){
@@ -45,8 +43,8 @@ public class User {
         this.pendingPosts.clear();
     }
 
-    public void removePendingPost(Post post) {
-        this.pendingPosts.remove(post);
+    public Object getUserLock() {
+        return userLock;
     }
 
     public User(String username, String password) {
@@ -55,18 +53,12 @@ public class User {
         loggedIn = new AtomicBoolean(false);
         following = new ConcurrentLinkedQueue<>();
         followers = new ConcurrentLinkedQueue<>();
-        posted = new ConcurrentLinkedQueue<>();
-        sent = new ConcurrentLinkedQueue<>();
-        received = new ConcurrentLinkedQueue<>();
         pendingPosts = new ConcurrentLinkedQueue<>();
+        userLock = new Object();
     }
 
     public Queue<User> getMyFollowers() {
         return followers;
-    }
-
-    public void setMyFollowers(Queue<User> followers) {
-        this.followers = followers;
     }
 
     public void addFollower(User follower) {
@@ -96,35 +88,6 @@ public class User {
     public Queue<User> getImFollowing() {
         return following;
     }
-
-//    public void setImFollowing(Queue<User> following) {
-//        this.following = following;
-//    }
-
-//    public Queue<Post> getPosted() {
-//        return posted;
-//    }
-
-//    public void setPosted(Queue<Post> posted) {
-//        this.posted = posted;
-//    }
-
-//    public Queue<PrivateMessage> getSent() {
-//        return sent;
-//    }
-
-//    public void setSent(Queue<PrivateMessage> sent) {
-//        this.sent = sent;
-//    }
-
-//    public Queue<PrivateMessage> getReceived() {
-//        return received;
-//    }
-
-    public void setReceived(Queue<PrivateMessage> received) {
-        this.received = received;
-    }
-
 
     public String getUsername() {
         return username;
