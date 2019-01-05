@@ -2,6 +2,7 @@ package bgu.spl.net.impl.BGSServer;
 
 import bgu.spl.net.impl.BGSServer.DBModels.DB;
 import bgu.spl.net.impl.BGSServer.EncoderDecoder.MessageContainerEncoderDecoder;
+import bgu.spl.net.impl.BGSServer.Protocol.BGSProtocol;
 import bgu.spl.net.srv.Server;
 
 public class TPCMain {
@@ -13,7 +14,7 @@ public class TPCMain {
 
         Server.threadPerClient(
                 port, //port
-                () ->  new RemoteCommandInvocationProtocol(db), //protocol factory
+                () ->  new BGSProtocol(db), //protocol factory
                 MessageContainerEncoderDecoder::new //message encoder decoder factory
         ).serve();
     }

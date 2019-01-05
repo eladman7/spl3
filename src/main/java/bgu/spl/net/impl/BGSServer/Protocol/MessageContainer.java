@@ -1,7 +1,4 @@
-package bgu.spl.net.api;
-
-import bgu.spl.net.impl.BGSServer.Command;
-import bgu.spl.net.impl.BGSServer.ExecutionInfo;
+package bgu.spl.net.impl.BGSServer.Protocol;
 
 public class MessageContainer{
     public enum Type {

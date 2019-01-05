@@ -1,11 +1,11 @@
 package bgu.spl.net.impl.BGSServer.CommandModels;
 
-import bgu.spl.net.api.MessageContainer;
+import bgu.spl.net.impl.BGSServer.Protocol.MessageContainer;
 import bgu.spl.net.api.bidi.Connections;
-import bgu.spl.net.impl.BGSServer.Command;
+import bgu.spl.net.impl.BGSServer.Protocol.Command;
 import bgu.spl.net.impl.BGSServer.DBModels.DB;
 import bgu.spl.net.impl.BGSServer.DBModels.User;
-import bgu.spl.net.impl.BGSServer.ExecutionInfo;
+import bgu.spl.net.impl.BGSServer.Protocol.ExecutionInfo;
 
 
 public class LogoutCommand extends Responder implements Command<ExecutionInfo>{

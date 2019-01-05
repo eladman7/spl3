@@ -3,7 +3,6 @@ package bgu.spl.net.srv;
 import bgu.spl.net.api.MessageEncoderDecoder;
 import bgu.spl.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl.net.api.bidi.Connections;
-import bgu.spl.net.api.bidi.ConnectionsImpl;
 import bgu.spl.net.srv.bidi.ConnectionHandler;
 
 import java.io.IOException;
@@ -108,7 +107,7 @@ public class Reactor<T> implements Server{
         MessageEncoderDecoder<T> codec = encoderDecoderFactory.get();
 
         final NonBlockingConnectionHandler<T> handler = new NonBlockingConnectionHandler<>(
-                connectionId, codec,
+                codec,
                 protocol,
                 clientChan,
                 this);

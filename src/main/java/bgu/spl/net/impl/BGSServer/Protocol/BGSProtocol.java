@@ -1,18 +1,17 @@
-package bgu.spl.net.impl.BGSServer;
+package bgu.spl.net.impl.BGSServer.Protocol;
 
-import bgu.spl.net.api.MessageContainer;
 import bgu.spl.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.impl.BGSServer.DBModels.DB;
 
 
-public class RemoteCommandInvocationProtocol implements BidiMessagingProtocol<MessageContainer> {
+public class BGSProtocol implements BidiMessagingProtocol<MessageContainer> {
     private int connectionId;
     private Connections<MessageContainer> connections;
     private DB db;
     private boolean shouldTerminate;
 
-    public RemoteCommandInvocationProtocol(DB db) {
+    public BGSProtocol(DB db) {
         this.db = db;
     }
 

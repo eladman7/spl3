@@ -1,6 +1,6 @@
 package bgu.spl.net.impl.BGSServer.EncoderDecoder;
 
-import bgu.spl.net.api.MessageContainer;
+import bgu.spl.net.impl.BGSServer.Protocol.MessageContainer;
 import bgu.spl.net.api.MessageEncoderDecoder;
 import bgu.spl.net.impl.BGSServer.CommandModels.PMCommand;
 
@@ -10,7 +10,7 @@ public class PMDecoder implements MessageEncoderDecoder<MessageContainer> {
     private String toUsername;
 
     public PMDecoder() {
-        this.stringEncoderDecoder = stringEncoderDecoder = new StringEncoderDecoder();
+        this.stringEncoderDecoder = new StringEncoderDecoder();
     }
 
     @Override

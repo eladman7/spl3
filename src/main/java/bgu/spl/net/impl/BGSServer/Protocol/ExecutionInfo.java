@@ -1,6 +1,5 @@
-package bgu.spl.net.impl.BGSServer;
+package bgu.spl.net.impl.BGSServer.Protocol;
 
-import bgu.spl.net.api.MessageContainer;
 import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.impl.BGSServer.DBModels.DB;
 

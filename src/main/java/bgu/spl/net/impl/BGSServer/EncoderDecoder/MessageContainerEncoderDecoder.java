@@ -1,9 +1,13 @@
 package bgu.spl.net.impl.BGSServer.EncoderDecoder;
 
-import bgu.spl.net.api.MessageContainer;
+import bgu.spl.net.impl.BGSServer.Protocol.MessageContainer;
 import bgu.spl.net.api.MessageEncoderDecoder;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 
 public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<MessageContainer> {
     private Short opcode = null;
