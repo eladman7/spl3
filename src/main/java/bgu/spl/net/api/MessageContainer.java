@@ -1,7 +1,7 @@
 package bgu.spl.net.api;
 
-import bgu.spl.net.impl.rci.Command;
-import bgu.spl.net.impl.rci.ExecutionInfo;
+import bgu.spl.net.impl.BGSServer.Command;
+import bgu.spl.net.impl.BGSServer.ExecutionInfo;
 
 public class MessageContainer{
     public enum Type {
