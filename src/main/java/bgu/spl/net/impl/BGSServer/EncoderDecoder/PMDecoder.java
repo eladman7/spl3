@@ -1,8 +1,8 @@
 package bgu.spl.net.impl.BGSServer.EncoderDecoder;
 
-import bgu.spl.net.impl.BGSServer.Protocol.MessageContainer;
 import bgu.spl.net.api.MessageEncoderDecoder;
 import bgu.spl.net.impl.BGSServer.CommandModels.PMCommand;
+import bgu.spl.net.impl.BGSServer.Protocol.MessageContainer;
 
 public class PMDecoder implements MessageEncoderDecoder<MessageContainer> {
 

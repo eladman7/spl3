@@ -1,8 +1,8 @@
 package bgu.spl.net.impl.BGSServer.CommandModels;
 
-import bgu.spl.net.impl.BGSServer.Protocol.Command;
 import bgu.spl.net.impl.BGSServer.DBModels.DB;
 import bgu.spl.net.impl.BGSServer.DBModels.User;
+import bgu.spl.net.impl.BGSServer.Protocol.Command;
 import bgu.spl.net.impl.BGSServer.Protocol.ExecutionInfo;
 
 

@@ -1,9 +1,9 @@
 package bgu.spl.net.impl.BGSServer.EncoderDecoder;
 
-import bgu.spl.net.impl.BGSServer.Protocol.MessageContainer;
 import bgu.spl.net.api.MessageEncoderDecoder;
 import bgu.spl.net.impl.BGSServer.CommandModels.LoginCommand;
 import bgu.spl.net.impl.BGSServer.CommandModels.RegisterCommand;
+import bgu.spl.net.impl.BGSServer.Protocol.MessageContainer;
 
 public class LoginDecoder implements MessageEncoderDecoder<MessageContainer> {
     private RegisterDecoder userPassHelper;

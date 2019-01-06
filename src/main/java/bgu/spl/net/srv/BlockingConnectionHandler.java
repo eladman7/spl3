@@ -23,7 +23,7 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
         this.sock = sock;
         this.encdec = reader;
         this.protocol = protocol;
-        outLock = new Object();
+        this.outLock = new Object();
     }
 
     @Override
@@ -40,12 +40,9 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
                     protocol.process(nextMessage);
                 }
             }
-            close(); // todo ok here?
-
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-
     }
 
     @Override

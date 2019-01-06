@@ -1,8 +1,8 @@
 package bgu.spl.net.impl.BGSServer.CommandModels;
 
-import bgu.spl.net.impl.BGSServer.Protocol.Command;
 import bgu.spl.net.impl.BGSServer.DBModels.DB;
 import bgu.spl.net.impl.BGSServer.DBModels.User;
+import bgu.spl.net.impl.BGSServer.Protocol.Command;
 import bgu.spl.net.impl.BGSServer.Protocol.ExecutionInfo;
 
 
@@ -18,7 +18,6 @@ public class RegisterCommand extends Responder implements Command<ExecutionInfo>
 
     @Override
     public void execute(ExecutionInfo execInfo) {
-        System.out.println("inside RegisterCommand.execute()");
         DB db = execInfo.getDb();
 
         User me = db.getUser(execInfo.getConnId());

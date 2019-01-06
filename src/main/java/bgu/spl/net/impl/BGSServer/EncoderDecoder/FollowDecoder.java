@@ -1,8 +1,8 @@
 package bgu.spl.net.impl.BGSServer.EncoderDecoder;
 
-import bgu.spl.net.impl.BGSServer.Protocol.MessageContainer;
 import bgu.spl.net.api.MessageEncoderDecoder;
 import bgu.spl.net.impl.BGSServer.CommandModels.FollowCommand;
+import bgu.spl.net.impl.BGSServer.Protocol.MessageContainer;
 
 import java.util.Arrays;
 import java.util.LinkedList;

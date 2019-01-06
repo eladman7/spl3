@@ -1,9 +1,9 @@
 package bgu.spl.net.impl.BGSServer.CommandModels;
 
-import bgu.spl.net.impl.BGSServer.Protocol.MessageContainer;
 import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.impl.BGSServer.Protocol.Command;
 import bgu.spl.net.impl.BGSServer.Protocol.ExecutionInfo;
+import bgu.spl.net.impl.BGSServer.Protocol.MessageContainer;
 
 public class Responder {
     protected void ack(ExecutionInfo execInfo, short opcode, Object additionalData, Command<ExecutionInfo> command) {

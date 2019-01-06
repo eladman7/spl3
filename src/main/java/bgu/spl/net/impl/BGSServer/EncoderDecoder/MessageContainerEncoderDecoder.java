@@ -1,7 +1,7 @@
 package bgu.spl.net.impl.BGSServer.EncoderDecoder;
 
-import bgu.spl.net.impl.BGSServer.Protocol.MessageContainer;
 import bgu.spl.net.api.MessageEncoderDecoder;
+import bgu.spl.net.impl.BGSServer.Protocol.MessageContainer;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -56,7 +56,6 @@ public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<Mes
 
     private MessageContainer finish(MessageContainer messageContainer) {
         opcode = null;
-        System.out.println("got new message with cmd " + messageContainer.getCommand().getClass().getSimpleName());
         return messageContainer;
     }
 
@@ -97,7 +96,6 @@ public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<Mes
     }
 
     private void writeError(MessageContainer message, List<Byte> encodedBytes, ShortDecoder shortDecoder) {
-        System.out.println("sending error: " + message.getOriginOpcode());
         byte[] encodedOpcode = shortDecoder.encode((short) 11);
         addBytesToList(encodedBytes, encodedOpcode);
         byte[] encodedOrigin = shortDecoder.encode(message.getOriginOpcode());
@@ -105,7 +103,6 @@ public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<Mes
     }
 
     private void writeAck(MessageContainer message, List<Byte> encodedBytes, ShortDecoder shortDecoder) {
-        System.out.println("sending ack: " + message.getOriginOpcode());
         byte[] ackCodeBytes = shortDecoder.encode((short) 10);
         addBytesToList(encodedBytes, ackCodeBytes);
         byte[] originBytes = shortDecoder.encode(message.getOriginOpcode());
@@ -120,7 +117,6 @@ public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<Mes
     }
 
     private void writeNotification(MessageContainer message, List<Byte> encodedBytes, ShortDecoder shortDecoder) {
-        System.out.println("sending notification: " + message.getContent() + "to user: " + message.getFromUsername());
         byte[] encodedOpcode = shortDecoder.encode((short) 9);
         addBytesToList(encodedBytes, encodedOpcode);
         if (message.isPm()) {
@@ -141,14 +137,6 @@ public class MessageContainerEncoderDecoder implements MessageEncoderDecoder<Mes
         for (Byte b : bytes)
             finalArr[j++] = b;
         return finalArr;
-    }
-
-    public static Byte[] getBoxingArray(byte[] bytesArr) {
-        Byte[] bytes = new Byte[bytesArr.length];
-        int i = 0;
-        for (byte b : bytesArr)
-            bytes[i++] = b;
-        return bytes;
     }
 
     public static void addBytesToList(List<Byte> byteList, byte[] byteArr) {
