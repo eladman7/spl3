@@ -55,7 +55,7 @@ public class LoginCommand extends Responder implements Command<ExecutionInfo> {
                     execInfo.getConnId(), message.getText(), this);
             message.setPending(false);
         }
-        for(Post post:me.getPendingPosts()){
+        for(Post post: me.getPendingPosts()){
             notifyPublic(
                     execInfo, post.getFrom().getUsername(),
                     execInfo.getConnId(), post.getText(), this);

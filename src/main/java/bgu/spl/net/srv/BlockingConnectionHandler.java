@@ -57,6 +57,7 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
     @Override
     public void send(T msg) {
         try {
+            // prevents clients from writing to socket concurrently
             synchronized (outLock){
                 out.write(encdec.encode(msg));
                 out.flush();

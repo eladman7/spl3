@@ -55,6 +55,7 @@ public class User {
         followers = new ConcurrentLinkedQueue<>();
         pendingPosts = new ConcurrentLinkedQueue<>();
         userLock = new Object();
+        this.connectionId = -1;
     }
 
     public Queue<User> getMyFollowers() {
